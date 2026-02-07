@@ -1,6 +1,22 @@
-import { Recycle } from "lucide-react";
+import { useState } from "react";
+import { Recycle, Menu, X } from "lucide-react";
+
+const NAV_LINKS = [
+  { href: "#ficha-tecnica", label: "Ficha Técnica" },
+  { href: "#pdca", label: "PDCA" },
+  { href: "#kanban", label: "Kanban" },
+  { href: "#calculadora", label: "Calculadora" },
+  { href: "#dashboard", label: "Dashboard" },
+  { href: "#guias", label: "Guias" },
+  { href: "#plano-acao", label: "Plano de Ação" },
+  { href: "#colecao", label: "Coleção" },
+  { href: "#checklist", label: "Checklist" },
+  { href: "#conquistas", label: "Conquistas" },
+];
 
 const Navbar = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -8,11 +24,37 @@ const Navbar = () => {
           <Recycle className="w-6 h-6 text-primary" />
           <span className="font-display font-bold text-lg text-foreground">TextilCircular</span>
         </div>
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <a href="#ficha-tecnica" className="hover:text-primary transition-colors">Ficha Técnica</a>
-          <a href="#checklist" className="hover:text-primary transition-colors">Checklist</a>
+
+        {/* Desktop */}
+        <div className="hidden lg:flex items-center gap-4 text-xs font-medium text-muted-foreground">
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} href={link.href} className="hover:text-primary transition-colors">
+              {link.label}
+            </a>
+          ))}
         </div>
+
+        {/* Mobile toggle */}
+        <button className="lg:hidden p-2 text-foreground" onClick={() => setOpen(!open)}>
+          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
       </div>
+
+      {/* Mobile menu */}
+      {open && (
+        <div className="lg:hidden bg-background/95 backdrop-blur-md border-b border-border px-4 py-4 space-y-2">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-1.5"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };

@@ -1,7 +1,15 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FichaTecnicaForm from "@/components/FichaTecnicaForm";
+import PDCASection from "@/components/PDCASection";
+import KanbanSection from "@/components/KanbanSection";
+import WasteCalculator from "@/components/WasteCalculator";
+import DashboardSection from "@/components/DashboardSection";
+import GuidesSection from "@/components/GuidesSection";
+import ActionPlanSection from "@/components/ActionPlanSection";
+import SustainableCollectionSection from "@/components/SustainableCollectionSection";
 import ChecklistSection from "@/components/ChecklistSection";
+import AchievementsSection from "@/components/AchievementsSection";
 import { Recycle } from "lucide-react";
 
 const Index = () => {
@@ -11,7 +19,15 @@ const Index = () => {
       <main className="pt-16">
         <HeroSection />
         <FichaTecnicaForm />
+        <PDCASection />
+        <KanbanSection />
+        <WasteCalculator />
+        <DashboardSection />
+        <GuidesSection />
+        <ActionPlanSection />
+        <SustainableCollectionSection />
         <ChecklistSection />
+        <AchievementsSection />
       </main>
       <footer className="bg-card border-t border-border py-8 px-4">
         <div className="max-w-4xl mx-auto text-center">
