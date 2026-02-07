@@ -1,12 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import FichaTecnicaForm from "@/components/FichaTecnicaForm";
+import ChecklistSection from "@/components/ChecklistSection";
+import { Recycle } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main className="pt-16">
+        <HeroSection />
+        <FichaTecnicaForm />
+        <ChecklistSection />
+      </main>
+      <footer className="bg-card border-t border-border py-8 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Recycle className="w-5 h-5 text-primary" />
+            <span className="font-display font-semibold text-foreground">TextilCircular</span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Economia circular na indústria têxtil — Reduzir, reutilizar, inovar.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
