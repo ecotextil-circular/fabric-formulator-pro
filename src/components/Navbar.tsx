@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Recycle, Menu, X } from "lucide-react";
+import { Recycle, Menu, X, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
   { href: "#ficha-tecnica", label: "Ficha Técnica" },
@@ -16,6 +18,7 @@ const NAV_LINKS = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
@@ -32,6 +35,11 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
+          {user && (
+            <Button variant="ghost" size="sm" onClick={signOut} className="text-muted-foreground hover:text-destructive ml-2">
+              <LogOut className="w-4 h-4 mr-1" /> Sair
+            </Button>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -53,6 +61,11 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
+          {user && (
+            <Button variant="ghost" size="sm" onClick={signOut} className="w-full justify-start text-muted-foreground hover:text-destructive mt-2">
+              <LogOut className="w-4 h-4 mr-2" /> Sair
+            </Button>
+          )}
         </div>
       )}
     </nav>
