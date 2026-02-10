@@ -42,8 +42,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       options: { emailRedirectTo: window.location.origin },
     });
     if (error) {
-      if (error.message.includes("already registered")) return { error: "Este e-mail já está cadastrado." };
+      if (error.message.includes("already registered")) return { error: "Este e-mail já está cadastrado. Tente fazer login." };
       if (error.message.includes("Password")) return { error: "A senha deve ter pelo menos 6 caracteres." };
+      if (error.message.includes("rate limit") || error.message.includes("after")) return { error: "Muitas tentativas. Aguarde alguns minutos e tente novamente." };
       return { error: error.message };
     }
     return { error: null };
@@ -53,7 +54,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       if (error.message.includes("Invalid login")) return { error: "E-mail ou senha incorretos." };
-      if (error.message.includes("Email not confirmed")) return { error: "E-mail ainda não confirmado. Verifique sua caixa de entrada." };
+      if (error.message.includes("Email not confirmed")) return { error: "E-mail não confirmado. Tente criar uma nova conta." };
+      if (error.message.includes("rate limit") || error.message.includes("after")) return { error: "Muitas tentativas. Aguarde alguns minutos e tente novamente." };
       return { error: error.message };
     }
     return { error: null };
