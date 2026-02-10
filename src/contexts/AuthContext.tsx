@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       if (error.message.includes("Invalid login")) return { error: "E-mail ou senha incorretos." };
+      if (error.message.includes("Email not confirmed")) return { error: "E-mail ainda não confirmado. Verifique sua caixa de entrada." };
       return { error: error.message };
     }
     return { error: null };
