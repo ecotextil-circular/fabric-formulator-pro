@@ -10,6 +10,7 @@ import ActionPlanSection from "@/components/ActionPlanSection";
 import SustainableCollectionSection from "@/components/SustainableCollectionSection";
 import ChecklistSection from "@/components/ChecklistSection";
 import AchievementsSection from "@/components/AchievementsSection";
+import ScrollReveal from "@/components/ScrollReveal";
 import { Recycle } from "lucide-react";
 
 const Index = () => {
@@ -18,16 +19,36 @@ const Index = () => {
       <Navbar />
       <main className="pt-16">
         <HeroSection />
-        <FichaTecnicaForm />
-        <PDCASection />
-        <KanbanSection />
-        <WasteCalculator />
-        <DashboardSection />
-        <GuidesSection />
-        <ActionPlanSection />
-        <SustainableCollectionSection />
-        <ChecklistSection />
-        <AchievementsSection />
+        <ScrollReveal>
+          <FichaTecnicaForm />
+        </ScrollReveal>
+        <ScrollReveal delay={0.05}>
+          <PDCASection />
+        </ScrollReveal>
+        <ScrollReveal>
+          <KanbanSection />
+        </ScrollReveal>
+        <ScrollReveal delay={0.05}>
+          <WasteCalculator />
+        </ScrollReveal>
+        <ScrollReveal>
+          <DashboardSection />
+        </ScrollReveal>
+        <ScrollReveal direction="left">
+          <GuidesSection />
+        </ScrollReveal>
+        <ScrollReveal>
+          <ActionPlanSection />
+        </ScrollReveal>
+        <ScrollReveal direction="right">
+          <SustainableCollectionSection />
+        </ScrollReveal>
+        <ScrollReveal>
+          <ChecklistSection />
+        </ScrollReveal>
+        <ScrollReveal delay={0.1}>
+          <AchievementsSection />
+        </ScrollReveal>
       </main>
       <footer className="bg-card border-t border-border py-8 px-4">
         <div className="max-w-4xl mx-auto text-center">
