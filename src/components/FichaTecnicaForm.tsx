@@ -38,22 +38,31 @@ const FichaTecnicaForm = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setDesenhoFile(file);
-      const reader = new FileReader();
-      reader.onload = (ev) => setDesenhoPreview(ev.target?.result as string);
-      reader.readAsDataURL(file);
+      if (file.type === "application/pdf") {
+        setDesenhoPreview("pdf");
+      } else {
+        const reader = new FileReader();
+        reader.onload = (ev) => setDesenhoPreview(ev.target?.result as string);
+        reader.readAsDataURL(file);
+      }
     }
   };
 
   const handleDownloadDesenho = () => {
-    if (!desenhoPreview || !desenhoFile) return;
+    if (!desenhoFile) return;
+    const url = desenhoPreview === "pdf"
+      ? URL.createObjectURL(desenhoFile)
+      : desenhoPreview;
+    if (!url) return;
     const a = document.createElement("a");
-    a.href = desenhoPreview;
+    a.href = url;
     a.download = desenhoFile.name;
     a.click();
+    if (desenhoPreview === "pdf") URL.revokeObjectURL(url);
   };
 
   const addField = (setter: React.Dispatch<React.SetStateAction<DynamicField[]>>) => {
@@ -182,7 +191,14 @@ const FichaTecnicaForm = () => {
               <div className="border-2 border-dashed border-border rounded-xl p-8 text-center bg-background/50 hover:border-primary/50 transition-colors">
                 {desenhoPreview ? (
                   <div className="space-y-4">
-                    <img src={desenhoPreview} alt="Desenho do produto" className="max-h-64 mx-auto rounded-lg shadow-md" />
+                    {desenhoPreview === "pdf" ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <FileText className="w-16 h-16 text-primary" />
+                        <span className="text-sm font-medium text-foreground">{desenhoFile?.name}</span>
+                      </div>
+                    ) : (
+                      <img src={desenhoPreview} alt="Desenho do produto" className="max-h-64 mx-auto rounded-lg shadow-md" />
+                    )}
                     <div className="flex items-center justify-center gap-3">
                       <button
                         type="button"
@@ -196,7 +212,7 @@ const FichaTecnicaForm = () => {
                         onClick={() => fileInputRef.current?.click()}
                         className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:brightness-95 transition-all"
                       >
-                        <Upload className="w-4 h-4" /> Trocar Imagem
+                        <Upload className="w-4 h-4" /> Trocar Arquivo
                       </button>
                     </div>
                   </div>
@@ -208,10 +224,10 @@ const FichaTecnicaForm = () => {
                   >
                     <Upload className="w-10 h-10" />
                     <span className="font-medium">Clique para enviar o desenho do produto</span>
-                    <span className="text-xs">PNG, JPG ou SVG até 10MB</span>
+                    <span className="text-xs">PNG, JPG, SVG ou PDF até 10MB</span>
                   </button>
                 )}
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                <input ref={fileInputRef} type="file" accept="image/*,.pdf,application/pdf" onChange={handleFileUpload} className="hidden" />
               </div>
             </div>
 

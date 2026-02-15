@@ -10,6 +10,7 @@ import ActionPlanSection from "@/components/ActionPlanSection";
 import SustainableCollectionSection from "@/components/SustainableCollectionSection";
 import ChecklistSection from "@/components/ChecklistSection";
 import AchievementsSection from "@/components/AchievementsSection";
+import MindMapSection from "@/components/MindMapSection";
 import ScrollReveal from "@/components/ScrollReveal";
 import { Recycle } from "lucide-react";
 
@@ -36,6 +37,9 @@ const Index = () => {
         </ScrollReveal>
         <ScrollReveal direction="left">
           <GuidesSection />
+        </ScrollReveal>
+        <ScrollReveal>
+          <MindMapSection />
         </ScrollReveal>
         <ScrollReveal>
           <ActionPlanSection />
