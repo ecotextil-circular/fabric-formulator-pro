@@ -30,7 +30,7 @@ const FichaTecnicaForm = () => {
   const [desenhoFile, setDesenhoFile] = useState<File | null>(null);
   const [desenhoPreview, setDesenhoPreview] = useState<string | null>(null);
   const [aviamentos, setAviamentos] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
-  const [acessórios, setAcessórios] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
+  const [acessorios, setAcessorios] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
   const [linhas, setLinhas] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
   const [tecidos, setTecidos] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
   const [maquinarios, setMaquinarios] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
