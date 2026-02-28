@@ -240,7 +240,7 @@ const FichaTecnicaForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 {renderDynamicFields("Tecido", tecidos, setTecidos, "Ex: Algodão orgânico 100%")}
                 {renderDynamicFields("Aviamento", aviamentos, setAviamentos, "Ex: Zíper invisível 20cm")}
-                {renderDynamicFields("Acessório", acessorios, setAcessorios, "Ex: Botão de madeira natural")}
+                {renderDynamicFields("Acessórios", acessorios, setAcessorios, "Ex: Botão de madeira natural")}
                 {renderDynamicFields("Linha", linhas, setLinhas, "Ex: Linha 120 poliéster reciclado")}
                 {renderDynamicFields("Maquinário", maquinarios, setMaquinarios, "Ex: Máquina reta industrial")}
                 {renderDynamicFields("Sequência Operacional", operacoes, setOperacoes, "Ex: Unir ombros com overlock")}
