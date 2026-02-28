@@ -243,7 +243,7 @@ const FichaTecnicaForm = () => {
                 {renderDynamicFields("Acessório", acessorios, setAcessorios, "Ex: Botão de madeira natural")}
                 {renderDynamicFields("Linha", linhas, setLinhas, "Ex: Linha 120 poliéster reciclado")}
                 {renderDynamicFields("Maquinário", maquinarios, setMaquinarios, "Ex: Máquina reta industrial")}
-                {renderDynamicFields("Operação de Montagem", operacoes, setOperacoes, "Ex: Unir ombros com overlock")}
+                {renderDynamicFields("Sequência Operacional", operacoes, setOperacoes, "Ex: Unir ombros com overlock")}
               </div>
             </div>
 
