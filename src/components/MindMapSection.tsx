@@ -314,11 +314,11 @@ const MindMapSection = () => {
         {/* Categories */}
         <Card className="glass-card p-5 rounded-xl mt-6">
           <h4 className="font-semibold text-foreground text-sm mb-3">Categorias Disponíveis</h4>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
             {CATEGORIES.map((c) => (
-              <div key={c.name} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: c.color }} />
-                <span className="text-xs text-muted-foreground">{c.name}</span>
+              <div key={c.name} className="flex items-center gap-2 shrink-0">
+                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
+                <span className="text-xs text-muted-foreground whitespace-nowrap">{c.name}</span>
               </div>
             ))}
           </div>

@@ -105,11 +105,11 @@ const PDCASection = () => {
               onClick={() => setExpanded(expanded === item.letter ? null : item.letter)}
             >
               <div className="flex items-center gap-3 p-4">
-                <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center text-primary-foreground font-bold text-lg font-display`}>
+              <div className={`w-10 h-10 min-w-[40px] rounded-lg ${item.color} flex items-center justify-center text-primary-foreground font-bold text-lg font-display`}>
                   {item.letter}
                 </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-foreground font-display">{item.title}</h4>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-foreground font-display truncate">{item.title}</h4>
                 </div>
                 {expanded === item.letter ? (
                   <ChevronUp className="w-4 h-4 text-muted-foreground" />
