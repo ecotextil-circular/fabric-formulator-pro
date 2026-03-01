@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload, Download, Plus, Trash2, FileText, Scissors, Shirt } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,7 +24,6 @@ const FichaTecnicaForm = () => {
   const [desenhoFile, setDesenhoFile] = useState<File | null>(null);
   const [desenhoPreview, setDesenhoPreview] = useState<string | null>(null);
   
-  // Estados das listas
   const [aviamentos, setAviamentos] = useState([{ id: createId(), value: "" }]);
   const [acessorios, setAcessorios] = useState([{ id: createId(), value: "" }]);
   const [linhas, setLinhas] = useState([{ id: createId(), value: "" }]);
@@ -35,22 +33,10 @@ const FichaTecnicaForm = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Função para adicionar campos
-  const addField = (setter: any) => {
-    setter((prev: any) => [...prev, { id: createId(), value: "" }]);
-  };
+  const addField = (setter: any) => setter((prev: any) => [...prev, { id: createId(), value: "" }]);
+  const removeField = (setter: any, id: string) => setter((prev: any) => prev.length > 1 ? prev.filter((f: any) => f.id !== id) : prev);
+  const updateField = (setter: any, id: string, value: string) => setter((prev: any) => prev.map((f: any) => (f.id === id ? { ...f, value } : f)));
 
-  // Função para remover campos
-  const removeField = (setter: any, id: string) => {
-    setter((prev: any) => prev.length > 1 ? prev.filter((f: any) => f.id !== id) : prev);
-  };
-
-  // Função para atualizar campos
-  const updateField = (setter: any, id: string, value: string) => {
-    setter((prev: any) => prev.map((f: any) => (f.id === id ? { ...f, value } : f)));
-  };
-
-  // Componente para renderizar os campos dinâmicos (Acessórios, Tecidos, etc)
   const renderFields = (label: string, fields: any[], setter: any, placeholder: string) => (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -61,16 +47,9 @@ const FichaTecnicaForm = () => {
       </div>
       {fields.map((field) => (
         <div key={field.id} className="flex gap-2">
-          <Input 
-            value={field.value} 
-            onChange={(e) => updateField(setter, field.id, e.target.value)} 
-            placeholder={placeholder} 
-            className="bg-white"
-          />
+          <Input value={field.value} onChange={(e) => updateField(setter, field.id, e.target.value)} placeholder={placeholder} />
           {fields.length > 1 && (
-            <button type="button" onClick={() => removeField(setter, field.id)} className="p-2 text-red-500">
-              <Trash2 className="w-4 h-4" />
-            </button>
+            <button type="button" onClick={() => removeField(setter, field.id)} className="p-2 text-red-500"><Trash2 className="w-4 h-4" /></button>
           )}
         </div>
       ))}
@@ -80,16 +59,8 @@ const FichaTecnicaForm = () => {
   return (
     <section className="py-12 px-4 bg-gray-50">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">Ficha Técnica</h2>
-          <p className="text-gray-500">Preencha os dados da sua peça sustentável</p>
-        </div>
-
-        {/* A KEY no formulário resolve o erro de removeChild */}
-        <form key={tipoPeca} onSubmit={(e) => { e.preventDefault(); toast.success("Dados salvos!"); }}>
+        <form onSubmit={(e) => { e.preventDefault(); toast.success("Salvo!"); }}>
           <Card className="p-6 md:p-8 space-y-8 shadow-md">
-            
-            {/* Informações Básicas */}
             <div className="space-y-6">
               <h3 className="text-lg font-bold flex items-center gap-2 border-b pb-2">
                 <Shirt className="text-primary w-5 h-5" /> Dados da Peça
@@ -101,21 +72,21 @@ const FichaTecnicaForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>Tipo de Peça *</Label>
-                  <Select value={tipoPeca} onValueChange={setTipoPeca}>
-                    <SelectTrigger className="bg-white">
-                      <SelectValue placeholder="Selecione o tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TIPOS_PECA.map((t) => (
-                        <SelectItem key={t} value={t}>{t}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {/* SELETOR SEGURO: Não quebra o app ao mudar */}
+                  <select 
+                    value={tipoPeca} 
+                    onChange={(e) => setTipoPeca(e.target.value)}
+                    className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="">Selecione o tipo</option>
+                    {TIPOS_PECA.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* Detalhes Técnicos */}
             <div className="space-y-6">
               <h3 className="text-lg font-bold flex items-center gap-2 border-b pb-2">
                 <Scissors className="text-primary w-5 h-5" /> Detalhes de Produção
@@ -128,11 +99,9 @@ const FichaTecnicaForm = () => {
               </div>
             </div>
 
-            <div className="pt-6">
-              <button type="submit" className="w-full bg-primary text-white py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-all">
-                Salvar Ficha Técnica
-              </button>
-            </div>
+            <button type="submit" className="w-full bg-primary text-white py-4 rounded-lg font-bold text-lg hover:opacity-90">
+              Salvar Ficha Técnica
+            </button>
           </Card>
         </form>
       </div>
