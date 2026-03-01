@@ -6,20 +6,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Upload, Download, Plus, Trash2, FileText, Scissors, Shirt } from "lucide-react";
 import { toast } from "sonner";
 
-// Lista expandida e corrigida
+// Lista expandida e corrigida conforme seu pedido
 const TIPOS_PECA = [
   "Blusa", "Camisa", "Camiseta", "Regata", "Cropped", "Top", "Vestido", "Vestido de Festa",
   "Saia Curta", "Saia Longa", "Calça", "Shorts", "Bermuda", "Macacão", "Macaquinho",
   "Jaqueta", "Casaco", "Blazer", "Colete", "Moletom", "Biquíni", "Maiô", "Saída de Praia",
   "Canga", "Calcinha", "Sutiã", "Body", "Pijama", "Camisola", "Robe", "Fitness (Legging)",
-  "Infantil", "Outros"
+  "Infantil", "Recortado", "Outros"
 ];
 
 const createId = () => Math.random().toString(36).slice(2, 9);
 
 const FichaTecnicaForm = () => {
   const [tipoPeca, setTipoPeca] = useState("");
-  const [outroTipo, setOutroTipo] = useState(""); // Estado para o nome personalizado
+  const [outroTipo, setOutroTipo] = useState(""); 
   const [nomeProduto, setNomeProduto] = useState("");
   const [referencia, setReferencia] = useState("");
   const [colecao, setColecao] = useState("");
@@ -35,6 +35,30 @@ const FichaTecnicaForm = () => {
   const [operacoes, setOperacoes] = useState([{ id: createId(), value: "" }]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setDesenhoFile(file);
+      if (file.type === "application/pdf") {
+        setDesenhoPreview("pdf");
+      } else {
+        const reader = new FileReader();
+        reader.onload = (ev) => setDesenhoPreview(ev.target?.result as string);
+        reader.readAsDataURL(file);
+      }
+    }
+  };
+
+  const handleDownloadDesenho = () => {
+    if (!desenhoFile) return;
+    const url = desenhoPreview === "pdf" ? URL.createObjectURL(desenhoFile) : desenhoPreview;
+    if (!url) return;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = desenhoFile.name;
+    a.click();
+  };
 
   const addField = (setter: any) => setter((prev: any) => [...prev, { id: createId(), value: "" }]);
   const removeField = (setter: any, id: string) => setter((prev: any) => prev.length > 1 ? prev.filter((f: any) => f.id !== id) : prev);
@@ -73,7 +97,7 @@ const FichaTecnicaForm = () => {
     <section className="py-12 px-4 bg-gray-50">
       <div className="max-w-4xl mx-auto">
         <form onSubmit={handleSubmit}>
-          <Card className="p-6 md:p-8 space-y-8 shadow-md">
+          <Card key={tipoPeca} className="p-6 md:p-8 space-y-8 shadow-md">
             <div className="space-y-6">
               <h3 className="text-lg font-bold flex items-center gap-2 border-b pb-2">
                 <Shirt className="text-primary w-5 h-5" /> Dados da Peça
@@ -95,12 +119,10 @@ const FichaTecnicaForm = () => {
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
-                  
-                  {/* Campo extra se escolher "Outros" */}
                   {tipoPeca === "Outros" && (
                     <Input 
-                      className="mt-2 animate-in fade-in slide-in-from-top-1"
-                      placeholder="Digite o tipo da peça (ex: Kimono)" 
+                      className="mt-2"
+                      placeholder="Qual o tipo da peça?" 
                       value={outroTipo}
                       onChange={(e) => setOutroTipo(e.target.value)}
                     />
@@ -124,3 +146,11 @@ const FichaTecnicaForm = () => {
             <button type="submit" className="w-full bg-primary text-white py-4 rounded-lg font-bold text-lg hover:opacity-90">
               Salvar Ficha Técnica
             </button>
+          </Card>
+        </form>
+      </div>
+    </section>
+  );
+};
+
+export default FichaTecnicaForm;
