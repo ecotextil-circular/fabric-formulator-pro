@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,8 +35,20 @@ const FichaTecnicaForm = () => {
   const [tecidos, setTecidos] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
   const [maquinarios, setMaquinarios] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
   const [operacoes, setOperacoes] = useState<DynamicField[]>([{ id: createId(), value: "" }]);
+  
+  // Trava de segurança para evitar crash na troca de estado
+  const [isChanging, setIsChanging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Efeito para "limpar" a renderização suavemente ao mudar o tipo
+  useEffect(() => {
+    if (tipoPeca) {
+      setIsChanging(true);
+      const timer = setTimeout(() => setIsChanging(false), 10);
+      return () => clearTimeout(timer);
+    }
+  }, [tipoPeca]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -125,6 +137,8 @@ const FichaTecnicaForm = () => {
     </div>
   );
 
+  if (isChanging) return <div className="py-20 text-center">Carregando formulário...</div>;
+
   return (
     <section id="ficha-tecnica" className="py-16 px-4 section-gradient">
       <div className="max-w-4xl mx-auto">
@@ -142,9 +156,9 @@ const FichaTecnicaForm = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <Card className="glass-card p-6 md:p-8 rounded-2xl shadow-lg space-y-8">
+          <Card key={tipoPeca} className="glass-card p-6 md:p-8 rounded-2xl shadow-lg space-y-8">
             {/* Basic Info */}
-            <div key={tipoPeca} className="space-y-6">
+            <div className="space-y-6">
               <h3 className="text-xl font-semibold font-display text-foreground flex items-center gap-2">
                 <Shirt className="w-5 h-5 text-primary" />
                 Informações Básicas
@@ -156,7 +170,7 @@ const FichaTecnicaForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="tipo">Tipo de Peça *</Label>
-                  <Select value={tipoPeca} onValueChange={setTipoPeca}>
+                  <Select value={tipoPeca} onValueChange={(val) => setTipoPeca(val)}>
                     <SelectTrigger className="bg-background">
                       <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
