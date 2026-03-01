@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Upload, Download, Plus, Trash2, FileText, Scissors, Shirt } from "lucide-react";
 import { toast } from "sonner";
 
-// LISTA 100% LIMPA: Sem Principal, Recortado, Manto, Corpo ou Saída de Praia
 const TIPOS_PECA = [
   "Blusa", 
   "Camiseta", 
@@ -84,20 +83,10 @@ const FichaTecnicaForm = () => {
     </div>
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const tipoFinal = tipoPeca === "Outros" ? outroTipo : tipoPeca;
-    if (!tipoFinal || !nomeProduto) {
-      toast.error("Preencha o nome do produto e o tipo de peça.");
-      return;
-    }
-    toast.success(`Ficha de ${tipoFinal} salva com sucesso!`);
-  };
-
   return (
     <section className="py-12 px-4 bg-gray-50">
       <div className="max-w-4xl mx-auto">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => { e.preventDefault(); toast.success("Salvo!"); }}>
           <Card key={tipoPeca} className="p-6 md:p-8 space-y-8 shadow-md">
             <div className="space-y-6">
               <h3 className="text-lg font-bold flex items-center gap-2 border-b pb-2">
