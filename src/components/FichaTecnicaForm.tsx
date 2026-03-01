@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-// LISTA DEFINITIVA E LIMPA
 const TIPOS_PECA = [
   "Blusa", 
   "Camiseta", 
