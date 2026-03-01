@@ -6,13 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Upload, Download, Plus, Trash2, FileText, Scissors, Shirt } from "lucide-react";
 import { toast } from "sonner";
 
-// Lista revisada: Sem "Corpo", "Recortado", "Manto" ou "Principal"
+// LISTA LIMPA E ATUALIZADA - SEM RECORTADO, MANTO, CORPO OU PRINCIPAL
 const TIPOS_PECA = [
   "Blusa", "Camisa", "Camiseta", "Regata", "Cropped", "Top", "Vestido", "Vestido de Festa",
   "Saia Curta", "Saia Longa", "Calça", "Shorts", "Bermuda", "Macacão", "Macaquinho",
-  "Jaqueta", "Casaco", "Blazer", "Colete", "Cardigan", "Kimono", "Moletom", "Biquíni", 
-  "Maiô", "Saída de Praia", "Canga", "Calcinha", "Sutiã", "Pijama", "Camisola", "Robe", 
-  "Legging", "Top Fitness", "Infantil", "Outros"
+  "Jardineira", "Pantalona", "Ciganinha", "Jaqueta", "Casaco", "Blazer", "Colete",
+  "Cardigan", "Kimono", "Trench Coat", "Parka", "Poncho", "Bolero", "Moletom",
+  "Biquíni", "Maiô", "Saída de Praia", "Canga", "Calcinha", "Sutiã", "Corset",
+  "Pijama", "Camisola", "Robe", "Legging", "Top Fitness", "Infantil", "Echarpe",
+  "Lenço", "Outros"
 ];
 
 const createId = () => Math.random().toString(36).slice(2, 9);
