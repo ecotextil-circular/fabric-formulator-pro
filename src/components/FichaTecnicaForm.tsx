@@ -6,17 +6,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Upload, Download, Plus, Trash2, FileText, Scissors, Shirt } from "lucide-react";
 import { toast } from "sonner";
 
+// Lista expandida e corrigida
 const TIPOS_PECA = [
-  "Blusa", "Bermuda", "Saia Longa", "Saia Curta", "Top", "Jaqueta",
-  "Biquíni", "Saída de Praia", "Maiô", "Canga", "Calcinha", "Sutiã",
-  "Vestido", "Calça", "Shorts", "Macacão", "Cropped", "Camisa",
-  "Moletom", "Regata", "Body",
+  "Blusa", "Camisa", "Camiseta", "Regata", "Cropped", "Top", "Vestido", "Vestido de Festa",
+  "Saia Curta", "Saia Longa", "Calça", "Shorts", "Bermuda", "Macacão", "Macaquinho",
+  "Jaqueta", "Casaco", "Blazer", "Colete", "Moletom", "Biquíni", "Maiô", "Saída de Praia",
+  "Canga", "Calcinha", "Sutiã", "Body", "Pijama", "Camisola", "Robe", "Fitness (Legging)",
+  "Infantil", "Outros"
 ];
 
 const createId = () => Math.random().toString(36).slice(2, 9);
 
 const FichaTecnicaForm = () => {
   const [tipoPeca, setTipoPeca] = useState("");
+  const [outroTipo, setOutroTipo] = useState(""); // Estado para o nome personalizado
   const [nomeProduto, setNomeProduto] = useState("");
   const [referencia, setReferencia] = useState("");
   const [colecao, setColecao] = useState("");
@@ -56,10 +59,20 @@ const FichaTecnicaForm = () => {
     </div>
   );
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const tipoFinal = tipoPeca === "Outros" ? outroTipo : tipoPeca;
+    if (!tipoFinal || !nomeProduto) {
+      toast.error("Preencha o nome do produto e o tipo de peça.");
+      return;
+    }
+    toast.success(`Ficha de ${tipoFinal} salva com sucesso!`);
+  };
+
   return (
     <section className="py-12 px-4 bg-gray-50">
       <div className="max-w-4xl mx-auto">
-        <form onSubmit={(e) => { e.preventDefault(); toast.success("Salvo!"); }}>
+        <form onSubmit={handleSubmit}>
           <Card className="p-6 md:p-8 space-y-8 shadow-md">
             <div className="space-y-6">
               <h3 className="text-lg font-bold flex items-center gap-2 border-b pb-2">
@@ -72,7 +85,6 @@ const FichaTecnicaForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>Tipo de Peça *</Label>
-                  {/* SELETOR SEGURO: Não quebra o app ao mudar */}
                   <select 
                     value={tipoPeca} 
                     onChange={(e) => setTipoPeca(e.target.value)}
@@ -83,6 +95,16 @@ const FichaTecnicaForm = () => {
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
+                  
+                  {/* Campo extra se escolher "Outros" */}
+                  {tipoPeca === "Outros" && (
+                    <Input 
+                      className="mt-2 animate-in fade-in slide-in-from-top-1"
+                      placeholder="Digite o tipo da peça (ex: Kimono)" 
+                      value={outroTipo}
+                      onChange={(e) => setOutroTipo(e.target.value)}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -102,11 +124,3 @@ const FichaTecnicaForm = () => {
             <button type="submit" className="w-full bg-primary text-white py-4 rounded-lg font-bold text-lg hover:opacity-90">
               Salvar Ficha Técnica
             </button>
-          </Card>
-        </form>
-      </div>
-    </section>
-  );
-};
-
-export default FichaTecnicaForm;
