@@ -109,7 +109,7 @@ const PDCASection = () => {
                   {item.letter}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-foreground font-display truncate">{item.title}</h4>
+                  <h4 className="font-semibold text-foreground font-display">{item.title}</h4>
                 </div>
                 {expanded === item.letter ? (
                   <ChevronUp className="w-4 h-4 text-muted-foreground" />
