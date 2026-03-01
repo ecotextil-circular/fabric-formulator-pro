@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Upload, Download, Plus, Trash2, FileText, Scissors, Shirt } from "lucide-react";
 import { toast } from "sonner";
 
-// LISTA ATUALIZADA: Sem "Saída de Praia", "Recortado", "Manto" ou "Principal"
+// LISTA 100% LIMPA: Sem Principal, Recortado, Manto, Corpo ou Saída de Praia
 const TIPOS_PECA = [
   "Blusa", 
   "Camiseta", 
