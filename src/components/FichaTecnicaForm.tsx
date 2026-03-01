@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Upload, Download, Plus, Trash2, FileText, Scissors, Shirt } from "lucide-react";
 import { toast } from "sonner";
 
-// LISTA REDUZIDA E BÁSICA
+// LISTA ATUALIZADA: Sem "Saída de Praia", "Recortado", "Manto" ou "Principal"
 const TIPOS_PECA = [
   "Blusa", 
   "Camiseta", 
@@ -21,7 +21,6 @@ const TIPOS_PECA = [
   "Jaqueta", 
   "Biquíni", 
   "Maiô", 
-  "Saída de Praia", 
   "Fitness",
   "Infantil", 
   "Outros"
@@ -60,16 +59,6 @@ const FichaTecnicaForm = () => {
         reader.readAsDataURL(file);
       }
     }
-  };
-
-  const handleDownloadDesenho = () => {
-    if (!desenhoFile) return;
-    const url = desenhoPreview === "pdf" ? URL.createObjectURL(desenhoFile) : desenhoPreview;
-    if (!url) return;
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = desenhoFile.name;
-    a.click();
   };
 
   const addField = (setter: any) => setter((prev: any) => [...prev, { id: createId(), value: "" }]);
