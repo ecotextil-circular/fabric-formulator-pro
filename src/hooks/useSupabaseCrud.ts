@@ -64,8 +64,8 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableN
         .select()
         .single();
       if (error) throw error;
-      setItems((prev) => prev.map((i: any) => (i.id === id ? (data as T) : i)));
-      return data as T;
+      setItems((prev) => prev.map((i: any) => (i.id === id ? (data as unknown as T) : i)));
+      return data as unknown as T;
     } catch (err: any) {
       console.error(`Erro ao atualizar ${table}:`, err);
       toast.error("Erro ao atualizar.");
