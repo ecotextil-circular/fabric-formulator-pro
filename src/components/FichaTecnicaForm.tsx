@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Plus, Trash2, Download, Upload, FileText, Loader2 } from "lucide-react";
+import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
+import { useAuth } from "@/contexts/AuthContext";
 import { Plus, Trash2, Download, Upload, FileText } from "lucide-react";
 
 const TIPOS_PECA = [
