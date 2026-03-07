@@ -137,6 +137,51 @@ const ActionPlanSection = () => {
             Salvar Plano de Ação
           </button>
         </Card>
+
+        {/* Saved Plans */}
+        {user && (
+          <Card className="glass-card p-6 rounded-2xl mt-6">
+            <button
+              onClick={() => setShowSaved(!showSaved)}
+              className="flex items-center gap-2 text-sm font-semibold text-foreground mb-4"
+            >
+              <List className="w-4 h-4" />
+              Planos Salvos ({savedPlanos.length})
+            </button>
+            {showSaved && (
+              <div className="space-y-3">
+                {planosLoading && (
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Loader2 className="w-4 h-4 animate-spin" /> Carregando...
+                  </div>
+                )}
+                {savedPlanos.map((plano: any) => (
+                  <div key={plano.id} className="flex items-center justify-between bg-background/50 p-3 rounded-lg border border-border/50">
+                    <div>
+                      <p className="font-medium text-sm text-foreground">{plano.titulo}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {plano.dados?.items?.length || 0} ações • Progresso: {plano.dados?.progress || 0}%
+                        {' • '}{new Date(plano.created_at).toLocaleDateString('pt-BR')}
+                      </p>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        const ok = await deleteItem(plano.id);
+                        if (ok) toast.success("Plano deletado!");
+                      }}
+                      className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                {!planosLoading && savedPlanos.length === 0 && (
+                  <p className="text-sm text-muted-foreground">Nenhum plano salvo ainda.</p>
+                )}
+              </div>
+            )}
+          </Card>
+        )}
       </div>
     </section>
   );
