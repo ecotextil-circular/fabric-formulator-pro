@@ -1,8 +1,10 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Brain, Plus, Trash2, Info, GripHorizontal } from "lucide-react";
+import { Brain, Plus, Trash2, Info, GripHorizontal, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
+import { useAuth } from "@/contexts/AuthContext";
 
 const CATEGORIES = [
   { name: "Diagnóstico", color: "hsl(160, 55%, 38%)" },
