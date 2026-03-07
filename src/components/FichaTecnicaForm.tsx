@@ -77,7 +77,10 @@ const labelStyle: React.CSSProperties = {
   color: '#475569',
   fontSize: '13px',
   marginBottom: '4px',
-  whiteSpace: 'nowrap',
+  display: 'block',
+  overflow: 'visible',
+  whiteSpace: 'normal',
+  wordBreak: 'keep-all',
 };
 
 const addBtnStyle: React.CSSProperties = {
