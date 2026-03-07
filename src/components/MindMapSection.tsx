@@ -35,6 +35,8 @@ interface MindMap {
 const createId = () => Math.random().toString(36).slice(2, 9);
 
 const MindMapSection = () => {
+  const { user } = useAuth();
+  const { items: savedMaps, loading: mapsLoading, insertItem, updateItem: updateDbItem, deleteItem } = useSupabaseCrud<any>("mapas_mentais");
   const [maps, setMaps] = useState<MindMap[]>([]);
   const [activeMapId, setActiveMapId] = useState<string | null>(null);
   const [newNodeText, setNewNodeText] = useState("");
@@ -44,14 +46,39 @@ const MindMapSection = () => {
   const [dragging, setDragging] = useState<{ id: string; offsetX: number; offsetY: number } | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
+  // Load maps from DB
+  useEffect(() => {
+    if (savedMaps.length > 0) {
+      const loadedMaps = savedMaps.map((m: any) => ({
+        id: m.id,
+        name: m.titulo,
+        nodes: (m.dados?.nodes as MindNode[]) || [],
+      }));
+      setMaps(loadedMaps);
+      if (!activeMapId && loadedMaps.length > 0) {
+        setActiveMapId(loadedMaps[0].id);
+      }
+    }
+  }, [savedMaps]);
+
   const activeMap = maps.find((m) => m.id === activeMapId) || null;
 
-  const createNewMap = () => {
+  const createNewMap = async () => {
     const name = `Mapa ${maps.length + 1}`;
-    const newMap: MindMap = { id: createId(), name, nodes: [] };
-    setMaps((prev) => [...prev, newMap]);
-    setActiveMapId(newMap.id);
-    toast.success(`"${name}" criado!`);
+    if (user) {
+      const result = await insertItem({ titulo: name, dados: { nodes: [] } } as any);
+      if (result) {
+        const newMap: MindMap = { id: (result as any).id, name, nodes: [] };
+        setMaps((prev) => [...prev, newMap]);
+        setActiveMapId(newMap.id);
+        toast.success(`"${name}" criado!`);
+      }
+    } else {
+      const newMap: MindMap = { id: createId(), name, nodes: [] };
+      setMaps((prev) => [...prev, newMap]);
+      setActiveMapId(newMap.id);
+      toast.success(`"${name}" criado!`);
+    }
   };
 
   const updateActiveMap = useCallback(
@@ -60,6 +87,12 @@ const MindMapSection = () => {
     },
     [activeMapId]
   );
+
+  const saveCurrentMap = async () => {
+    if (!activeMap || !user) return;
+    await updateDbItem(activeMap.id, { titulo: activeMap.name, dados: { nodes: activeMap.nodes } } as any);
+    toast.success("Mapa salvo!");
+  };
 
   const addNode = () => {
     if (!newNodeText.trim() || !activeMap) return;
