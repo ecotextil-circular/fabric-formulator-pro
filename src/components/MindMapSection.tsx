@@ -279,6 +279,11 @@ const MindMapSection = () => {
                 {connectingFrom && (
                   <span className="text-xs text-primary font-medium animate-pulse">Selecione o nó de destino...</span>
                 )}
+                {user && activeMap && (
+                  <button onClick={saveCurrentMap} className="inline-flex items-center gap-1 bg-olive text-white px-3 py-2 rounded-lg text-xs font-medium hover:brightness-110 transition-all ml-auto">
+                    <Save className="w-3.5 h-3.5" /> Salvar Mapa
+                  </button>
+                )}
               </div>
               {/* Canvas area */}
               <div
