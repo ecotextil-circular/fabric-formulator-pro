@@ -21,10 +21,13 @@ interface ActionItem {
 const createId = () => Math.random().toString(36).slice(2, 9);
 
 const ActionPlanSection = () => {
+  const { user } = useAuth();
+  const { items: savedPlanos, loading: planosLoading, insertItem, deleteItem } = useSupabaseCrud<any>("planos_acao");
   const [planName, setPlanName] = useState("");
   const [items, setItems] = useState<ActionItem[]>([
     { id: createId(), action: "", responsible: "", deadline: "", priority: "media", done: false },
   ]);
+  const [showSaved, setShowSaved] = useState(false);
 
   const addItem = () => {
     setItems((prev) => [...prev, { id: createId(), action: "", responsible: "", deadline: "", priority: "media", done: false }]);
@@ -40,12 +43,20 @@ const ActionPlanSection = () => {
 
   const progress = items.length > 0 ? Math.round((items.filter((i) => i.done).length / items.length) * 100) : 0;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!planName) {
       toast.error("Dê um nome ao seu plano de ação.");
       return;
     }
-    toast.success("Plano de ação salvo com sucesso!");
+    const result = await insertItem({
+      titulo: planName,
+      dados: { items, progress },
+    } as any);
+    if (result) {
+      toast.success("Plano de ação salvo com sucesso!");
+      setPlanName("");
+      setItems([{ id: createId(), action: "", responsible: "", deadline: "", priority: "media", done: false }]);
+    }
   };
 
   return (
