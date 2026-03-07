@@ -6,15 +6,43 @@ const GUIDE_SECTIONS = [
   {
     icon: Leaf,
     title: "Introdução à Economia Circular na Indústria Têxtil",
-    content: `A economia circular é um modelo econômico que elimina o conceito de "resíduo", mantendo materiais em uso pelo maior tempo possível. Na indústria têxtil, isso significa redesenhar processos produtivos para que tecidos, fibras e materiais circulem continuamente.
+    content: `A economia circular na indústria têxtil representa uma mudança de paradigma do modelo linear "extrair-produzir-descartar" para um sistema regenerativo. Este modelo busca manter produtos, componentes e materiais em seu mais alto nível de utilidade e valor o tempo todo.
 
-Princípios fundamentais:
+Nova Regulamentação Europeia: Proibição da Destruição de Roupas Não Vendidas
+
+A União Europeia deu um passo histórico ao proibir a destruição de roupas e calçados não vendidos, desafiando diretamente o modelo de negócio do fast fashion. Esta medida faz parte de um pacote mais amplo de regulamentações de sustentabilidade que visa transformar a indústria têxtil europeia.
+
+Principais pontos da regulamentação:
+• Proibição da destruição: As empresas não poderão mais descartar ou incinerar produtos têxteis não vendidos
+• Obrigatoriedade de reaproveitamento: Roupas excedentes devem ser doadas, recicladas ou revendidas
+• Transparência na cadeia produtiva: Marcas devem divulgar informações sobre volumes de produção e destino de produtos não vendidos
+• Responsabilidade atribuída ao produtor: Fabricantes são responsáveis pelo ciclo completo dos produtos
+• Metas de redução de desperdício: Estabelecimento de objetivos progressivos de redução de resíduos têxteis
+
+Impacto na indústria do fast fashion:
+A medida atinge especialmente o modelo de negócio baseado em superprodução e descarte rápido. Marcas de fast fashion produzem grandes volumes e destroem o excedente para manter a exclusividade e evitar a desvalorização. Com a nova lei, esse modelo se torna inviável na Europa.
+
+Oportunidades para empresas brasileiras:
+• Antecipação de tendências: A regulamentação europeia tende a influenciar legislações globais
+• Vantagem competitiva: Empresas que já adotam práticas circulares estarão à frente
+• Acesso ao mercado europeu: Conformidade com as novas regras abre portas para exportação
+• Inovação forçada: Necessidade de desenvolver novos modelos de negócio mais sustentáveis
+
+Princípios fundamentais da economia circular:
 • Eliminar resíduos e poluição desde o design
-• Manter produtos e materiais em uso
+• Manter produtos e materiais em uso pelo maior tempo possível
 • Regenerar sistemas naturais
-• Criar valor a partir do que seria descartado
+• Projetar para durabilidade, reparo e reciclagem
+• Implementar sistemas de logística reversa eficientes
 
-A indústria têxtil é uma das mais poluentes do mundo, responsável por cerca de 10% das emissões globais de carbono. A economia circular oferece uma alternativa viável para reduzir esse impacto, transformando resíduos em recursos e gerando valor econômico sustentável.`,
+Benefícios para a indústria têxtil:
+• Redução de custos com matéria-prima (até 30% de economia)
+• Menor impacto ambiental e pegada de carbono
+• Diferenciação competitiva no mercado
+• Conformidade com regulamentações ambientais crescentes
+• Fortalecimento da imagem da marca e da influência
+• Acesso a novos mercados e consumidores conscientes
+• Redução de riscos regulatórios e multas`,
   },
   {
     icon: Search,
