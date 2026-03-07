@@ -256,44 +256,47 @@ const FichaTecnicaForm = () => {
 
       const tipoFinal = tipoPeca === "Outros" ? outroTipo : tipoPeca;
 
-      const novaFicha: FichaTecnica = {
-        id: Date.now().toString(),
+      const dados = {
         nomeProduto,
         referencia,
         tipoPeca: tipoFinal,
         outroTipo,
         colecao,
         designer,
-        dataCriacao,
         observacoes,
         tecidos,
         aviamentos,
         acessorios,
         maquinario,
         sequenciaOperacional,
-        dataSalvamento: new Date().toLocaleString('pt-BR'),
       };
 
-      setFichas([...fichas, novaFicha]);
+      const result = await insertItem({
+        referencia_codigo: referencia,
+        data_criacao: dataCriacao || null,
+        dados,
+      } as any);
 
-      // Limpar formulário
-      setNomeProduto("");
-      setReferencia("");
-      setTipoPeca("");
-      setOutroTipo("");
-      setColecao("");
-      setDesigner("");
-      setDataCriacao("");
-      setObservacoes("");
-      setTecidos([]);
-      setAviamentos([]);
-      setAcessorios([]);
-      setMaquinario([]);
-      setSequenciaOperacional([]);
-      setDesenhoFile(null);
-      setDesenhoPreview(null);
+      if (result) {
+        // Limpar formulário
+        setNomeProduto("");
+        setReferencia("");
+        setTipoPeca("");
+        setOutroTipo("");
+        setColecao("");
+        setDesigner("");
+        setDataCriacao("");
+        setObservacoes("");
+        setTecidos([]);
+        setAviamentos([]);
+        setAcessorios([]);
+        setMaquinario([]);
+        setSequenciaOperacional([]);
+        setDesenhoFile(null);
+        setDesenhoPreview(null);
 
-      toast.success(`Ficha de "${nomeProduto}" (${tipoFinal}) salva com sucesso!`);
+        toast.success(`Ficha de "${nomeProduto}" (${tipoFinal}) salva com sucesso!`);
+      }
     } catch (error) {
       console.error('Erro ao salvar ficha:', error);
       toast.error('Erro ao salvar ficha técnica');
