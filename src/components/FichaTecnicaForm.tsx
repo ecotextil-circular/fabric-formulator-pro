@@ -77,7 +77,10 @@ const labelStyle: React.CSSProperties = {
   color: '#475569',
   fontSize: '13px',
   marginBottom: '4px',
-  whiteSpace: 'nowrap',
+  display: 'block',
+  overflow: 'visible',
+  whiteSpace: 'normal',
+  wordBreak: 'keep-all',
 };
 
 const addBtnStyle: React.CSSProperties = {
@@ -350,7 +353,7 @@ const FichaTecnicaForm = () => {
           {/* Informações Básicas */}
           <div style={sectionStyle}>
             <div style={sectionTitle}>📋 Informações Básicas</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
               <div>
                 <label style={labelStyle}>Nome do Produto *</label>
                 <input style={inputStyle} value={nomeProduto} onChange={e => setNomeProduto(e.target.value)} placeholder="Ex: Blusa Verão" />
