@@ -44,8 +44,8 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableN
         .select()
         .single();
       if (error) throw error;
-      setItems((prev) => [data as T, ...prev]);
-      return data as T;
+      setItems((prev) => [data as unknown as T, ...prev]);
+      return data as unknown as T;
     } catch (err: any) {
       console.error(`Erro ao inserir em ${table}:`, err);
       toast.error("Erro ao salvar no banco de dados.");
