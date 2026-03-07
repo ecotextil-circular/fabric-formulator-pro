@@ -492,22 +492,28 @@ const FichaTecnicaForm = () => {
         </form>
 
         {/* Lista de Fichas Salvas */}
-        {fichas.length > 0 && (
+        {fichasLoading && (
+          <div style={{ textAlign: 'center', marginTop: '30px' }}>
+            <Loader2 className="animate-spin inline" size={24} />
+            <p style={{ fontSize: '14px', color: '#64748b', marginTop: '8px' }}>Carregando fichas...</p>
+          </div>
+        )}
+        {fichasDb.length > 0 && (
           <div style={{ marginTop: '40px', paddingTop: '30px', borderTop: '2px solid #e2e8f0' }}>
             <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px', color: '#0f172a' }}>
-              Fichas Técnicas Salvas ({fichas.length})
+              Fichas Técnicas Salvas ({fichasDb.length})
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '12px' }}>
-              {fichas.map((ficha) => (
+              {fichasDb.map((ficha: any) => (
                 <div key={ficha.id} style={{ padding: '12px', backgroundColor: '#f1f5f9', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-                  <p style={{ fontWeight: 'bold', color: '#0f172a', marginBottom: '4px' }}>{ficha.nomeProduto}</p>
-                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>Tipo: {ficha.tipoPeca}</p>
-                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Salvo em: {ficha.dataSalvamento}</p>
+                  <p style={{ fontWeight: 'bold', color: '#0f172a', marginBottom: '4px' }}>{ficha.dados?.nomeProduto || 'Sem nome'}</p>
+                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>Tipo: {ficha.dados?.tipoPeca || '-'}</p>
+                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>Ref: {ficha.referencia_codigo || '-'}</p>
+                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Salvo em: {new Date(ficha.created_at).toLocaleString('pt-BR')}</p>
                   <button
-                    onClick={() => {
-                      const fichasAtualizadas = fichas.filter(f => f.id !== ficha.id);
-                      setFichas(fichasAtualizadas);
-                      toast.success('Ficha deletada!');
+                    onClick={async () => {
+                      const ok = await deleteItem(ficha.id);
+                      if (ok) toast.success('Ficha deletada!');
                     }}
                     style={{ ...removeBtnStyle, width: '100%', justifyContent: 'center' }}
                   >
