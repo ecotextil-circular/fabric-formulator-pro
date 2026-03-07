@@ -14,7 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      fichas_tecnicas: {
+        Row: {
+          created_at: string
+          dados: Json
+          data_criacao: string | null
+          id: string
+          referencia_codigo: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dados?: Json
+          data_criacao?: string | null
+          id?: string
+          referencia_codigo?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dados?: Json
+          data_criacao?: string | null
+          id?: string
+          referencia_codigo?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mapas_mentais: {
+        Row: {
+          created_at: string
+          dados: Json
+          id: string
+          imagem_url: string | null
+          titulo: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dados?: Json
+          id?: string
+          imagem_url?: string | null
+          titulo?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dados?: Json
+          id?: string
+          imagem_url?: string | null
+          titulo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      planos_acao: {
+        Row: {
+          created_at: string
+          dados: Json
+          id: string
+          titulo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dados?: Json
+          id?: string
+          titulo?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dados?: Json
+          id?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
