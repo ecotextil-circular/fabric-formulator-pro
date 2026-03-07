@@ -112,6 +112,9 @@ const removeBtnStyle: React.CSSProperties = {
 };
 
 const FichaTecnicaForm = () => {
+  const { user } = useAuth();
+  const { items: fichasDb, loading: fichasLoading, insertItem, deleteItem } = useSupabaseCrud<any>("fichas_tecnicas");
+
   const [tipoPeca, setTipoPeca] = useState("");
   const [outroTipo, setOutroTipo] = useState("");
   const [nomeProduto, setNomeProduto] = useState("");
@@ -132,29 +135,6 @@ const FichaTecnicaForm = () => {
   const [sequenciaOperacional, setSequenciaOperacional] = useState<string[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [fichas, setFichas] = useState<FichaTecnica[]>([]);
-
-  // Carregar fichas do localStorage ao montar
-  useEffect(() => {
-    try {
-      const fichasSalvas = localStorage.getItem('fichas_tecnicas');
-      if (fichasSalvas) {
-        setFichas(JSON.parse(fichasSalvas));
-      }
-    } catch (error) {
-      console.error('Erro ao carregar fichas:', error);
-      toast.error('Erro ao carregar fichas salvas');
-    }
-  }, []);
-
-  // Salvar fichas no localStorage sempre que mudarem
-  useEffect(() => {
-    try {
-      localStorage.setItem('fichas_tecnicas', JSON.stringify(fichas));
-    } catch (error) {
-      console.error('Erro ao salvar fichas:', error);
-    }
-  }, [fichas]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
