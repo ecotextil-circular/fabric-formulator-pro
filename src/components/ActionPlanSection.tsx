@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Target, Plus, Trash2, CheckCircle2 } from "lucide-react";
+import { Target, Plus, Trash2, CheckCircle2, Save, Loader2, List } from "lucide-react";
 import { toast } from "sonner";
+import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ActionItem {
   id: string;
@@ -19,10 +21,13 @@ interface ActionItem {
 const createId = () => Math.random().toString(36).slice(2, 9);
 
 const ActionPlanSection = () => {
+  const { user } = useAuth();
+  const { items: savedPlanos, loading: planosLoading, insertItem, deleteItem } = useSupabaseCrud<any>("planos_acao");
   const [planName, setPlanName] = useState("");
   const [items, setItems] = useState<ActionItem[]>([
     { id: createId(), action: "", responsible: "", deadline: "", priority: "media", done: false },
   ]);
+  const [showSaved, setShowSaved] = useState(false);
 
   const addItem = () => {
     setItems((prev) => [...prev, { id: createId(), action: "", responsible: "", deadline: "", priority: "media", done: false }]);
@@ -38,12 +43,20 @@ const ActionPlanSection = () => {
 
   const progress = items.length > 0 ? Math.round((items.filter((i) => i.done).length / items.length) * 100) : 0;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!planName) {
       toast.error("Dê um nome ao seu plano de ação.");
       return;
     }
-    toast.success("Plano de ação salvo com sucesso!");
+    const result = await insertItem({
+      titulo: planName,
+      dados: { items, progress },
+    } as any);
+    if (result) {
+      toast.success("Plano de ação salvo com sucesso!");
+      setPlanName("");
+      setItems([{ id: createId(), action: "", responsible: "", deadline: "", priority: "media", done: false }]);
+    }
   };
 
   return (
@@ -124,6 +137,51 @@ const ActionPlanSection = () => {
             Salvar Plano de Ação
           </button>
         </Card>
+
+        {/* Saved Plans */}
+        {user && (
+          <Card className="glass-card p-6 rounded-2xl mt-6">
+            <button
+              onClick={() => setShowSaved(!showSaved)}
+              className="flex items-center gap-2 text-sm font-semibold text-foreground mb-4"
+            >
+              <List className="w-4 h-4" />
+              Planos Salvos ({savedPlanos.length})
+            </button>
+            {showSaved && (
+              <div className="space-y-3">
+                {planosLoading && (
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Loader2 className="w-4 h-4 animate-spin" /> Carregando...
+                  </div>
+                )}
+                {savedPlanos.map((plano: any) => (
+                  <div key={plano.id} className="flex items-center justify-between bg-background/50 p-3 rounded-lg border border-border/50">
+                    <div>
+                      <p className="font-medium text-sm text-foreground">{plano.titulo}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {plano.dados?.items?.length || 0} ações • Progresso: {plano.dados?.progress || 0}%
+                        {' • '}{new Date(plano.created_at).toLocaleDateString('pt-BR')}
+                      </p>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        const ok = await deleteItem(plano.id);
+                        if (ok) toast.success("Plano deletado!");
+                      }}
+                      className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                {!planosLoading && savedPlanos.length === 0 && (
+                  <p className="text-sm text-muted-foreground">Nenhum plano salvo ainda.</p>
+                )}
+              </div>
+            )}
+          </Card>
+        )}
       </div>
     </section>
   );
