@@ -20,7 +20,7 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableN
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      setItems((data as T[]) || []);
+      setItems((data as unknown as T[]) || []);
     } catch (err: any) {
       console.error(`Erro ao carregar ${table}:`, err);
     } finally {
