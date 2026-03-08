@@ -151,20 +151,6 @@ const SustainableCollectionSection = () => {
     toast.success(`${fieldName} baixado!`);
   };
 
-  // Extract uploaded file entries from text (emoji name — url)
-  const extractFiles = (text: string) => {
-    if (!text) return [];
-    const lines = text.split('\n');
-    const files: { emoji: string; name: string; url: string }[] = [];
-    for (const line of lines) {
-      const match = line.match(/^(📄|📎|🎬)\s*(.+?)\s*—\s*(https?:\/\/.+)$/);
-      if (match) {
-        files.push({ emoji: match[1], name: match[2].trim(), url: match[3].trim() });
-      }
-    }
-    return files;
-  };
-
   const getFileIcon = (emoji: string) => {
     if (emoji === '📄') return <FileText className="w-4 h-4 text-red-500" />;
     if (emoji === '📎') return <Image className="w-4 h-4 text-blue-500" />;
@@ -179,12 +165,7 @@ const SustainableCollectionSection = () => {
     return 'Arquivo';
   };
 
-  const removeFileFromField = (url: string, setField: (value: string | ((prev: string) => string)) => void) => {
-    setField(prev => prev.split('\n').filter(line => !line.includes(url)).join('\n').trim());
-  };
-
-  const FileList = ({ content, setField }: { content: string; setField: (value: string | ((prev: string) => string)) => void }) => {
-    const files = extractFiles(content);
+  const FileList = ({ files, setFiles }: { files: { emoji: string; name: string; url: string }[]; setFiles: React.Dispatch<React.SetStateAction<{ emoji: string; name: string; url: string }[]>> }) => {
     if (files.length === 0) return null;
     return (
       <div className="mt-3 space-y-2">
@@ -202,7 +183,7 @@ const SustainableCollectionSection = () => {
             <a href={f.url} download className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all" onClick={e => e.stopPropagation()}>
               <Download className="w-3 h-3" /> Baixar
             </a>
-            <button onClick={() => removeFileFromField(f.url, setField)} className="p-1.5 text-muted-foreground hover:text-destructive rounded transition-all">
+            <button onClick={() => setFiles(prev => prev.filter((_, idx) => idx !== i))} className="p-1.5 text-muted-foreground hover:text-destructive rounded transition-all">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
