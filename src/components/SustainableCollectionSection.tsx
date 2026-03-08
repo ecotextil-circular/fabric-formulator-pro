@@ -442,25 +442,25 @@ const SustainableCollectionSection = () => {
                     <FileText className="w-3 h-3" /> PDF
                     <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📄");
+                      if (file) await uploadFile(file, setReferenciasFiles, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
                     <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📎");
+                      if (file) await uploadFile(file, setReferenciasFiles, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
                     <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "🎬");
+                      if (file) await uploadFile(file, setReferenciasFiles, "🎬");
                     }} />
                   </label>
                 </div>
-                <FileList content={referenciasVisuais} setField={setReferenciasVisuais} />
+                <FileList files={referenciasFiles} setFiles={setReferenciasFiles} />
               </div>
               <div>
                 <Label className="text-base">Esboços/Croquis</Label>
@@ -471,25 +471,25 @@ const SustainableCollectionSection = () => {
                     <FileText className="w-3 h-3" /> PDF
                     <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📄");
+                      if (file) await uploadFile(file, setEsbocosFiles, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
                     <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📎");
+                      if (file) await uploadFile(file, setEsbocosFiles, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
                     <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "🎬");
+                      if (file) await uploadFile(file, setEsbocosFiles, "🎬");
                     }} />
                   </label>
                 </div>
-                <FileList content={esbocosCroquis} setField={setEsbocosCroquis} />
+                <FileList files={esbocosFiles} setFiles={setEsbocosFiles} />
               </div>
             </div>
           )}
