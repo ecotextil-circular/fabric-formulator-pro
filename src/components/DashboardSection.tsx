@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BarChart3, TrendingUp, Recycle, Droplets, Zap, Save, Eraser, Eye, X, List, Trash2 } from "lucide-react";
+import SectionBanner, { SECTION_BANNERS } from "@/components/SectionBanner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 import { toast } from "sonner";
 import { useItensSalvos } from "@/hooks/useItensSalvos";
@@ -63,11 +64,7 @@ const DashboardSection = () => {
   return (
     <section id="dashboard" className="py-16 px-4 section-gradient">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4"><BarChart3 className="w-4 h-4" /> Visão Geral</div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">Dashboard Interativo</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-base">Insira dados da produção e visualize gráficos sobre sustentabilidade e resíduos.</p>
-        </div>
+        <SectionBanner {...SECTION_BANNERS.dashboard} />
 
         <div className="mb-4">
           <Input value={dashName} onChange={(e) => setDashName(e.target.value)} placeholder="Nome do dashboard (para salvar)..." className="bg-card max-w-xs text-base" />

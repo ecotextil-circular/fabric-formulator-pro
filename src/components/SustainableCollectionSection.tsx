@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sparkles, Save, Eraser, Eye, X, List, Trash2, Leaf, Calculator, Download, Image, FileText, Video } from "lucide-react";
+import SectionBanner, { SECTION_BANNERS } from "@/components/SectionBanner";
 import { toast } from "sonner";
 import { useItensSalvos } from "@/hooks/useItensSalvos";
 import { useAuth } from "@/contexts/AuthContext";
@@ -293,11 +294,7 @@ const SustainableCollectionSection = () => {
   return (
     <section id="colecao" className="py-16 px-4 section-gradient">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4"><Sparkles className="w-4 h-4" /> Criação Sustentável</div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">Como Criar uma Coleção Sustentável</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-base">Passo a passo para desenvolver uma coleção com princípios de economia circular.</p>
-        </div>
+        <SectionBanner {...SECTION_BANNERS.colecao} />
 
         <div className="flex gap-1 mb-6 overflow-x-auto pb-2">
           {TABS.map(tab => (

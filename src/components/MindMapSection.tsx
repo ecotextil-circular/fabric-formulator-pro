@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Brain, Plus, Trash2, Info, Link2, Save, Eraser, Eye, X, List } from "lucide-react";
+import SectionBanner, { SECTION_BANNERS } from "@/components/SectionBanner";
 import { toast } from "sonner";
 import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
 import { useAuth } from "@/contexts/AuthContext";
@@ -145,11 +146,7 @@ const MindMapSection = () => {
   return (
     <section id="mapa-mental" className="py-16 px-4 bg-background">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4"><Brain className="w-4 h-4" /> Ferramenta Visual</div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">Mapa Mental Interativo</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-base">Organize informações sobre economia circular de forma visual</p>
-        </div>
+        <SectionBanner {...SECTION_BANNERS.mindmap} />
 
         <Card className="glass-card p-5 rounded-xl mb-6">
           <div className="flex items-start gap-3">
