@@ -3,9 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
-type TableName = "fichas_tecnicas" | "mapas_mentais" | "planos_acao";
-
-export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableName) {
+export function useSupabaseCrud<T extends Record<string, unknown>>(table: string) {
   const { user } = useAuth();
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
@@ -14,7 +12,7 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableN
     if (!user) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from(table)
         .select("*")
         .eq("user_id", user.id)
@@ -32,15 +30,15 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableN
     fetchItems();
   }, [fetchItems]);
 
-  const insertItem = async (item: Omit<T, "id" | "user_id" | "created_at" | "updated_at">) => {
+  const insertItem = async (item: Record<string, unknown>) => {
     if (!user) {
       toast.error("Faça login para salvar.");
       return null;
     }
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from(table)
-        .insert({ ...item, user_id: user.id } as any)
+        .insert({ ...item, user_id: user.id })
         .select()
         .single();
       if (error) throw error;
@@ -53,12 +51,12 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableN
     }
   };
 
-  const updateItem = async (id: string, updates: Partial<T>) => {
+  const updateItem = async (id: string, updates: Record<string, unknown>) => {
     if (!user) return null;
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from(table)
-        .update({ ...updates, updated_at: new Date().toISOString() } as any)
+        .update({ ...updates, updated_at: new Date().toISOString() })
         .eq("id", id)
         .eq("user_id", user.id)
         .select()
@@ -76,7 +74,7 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: TableN
   const deleteItem = async (id: string) => {
     if (!user) return false;
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from(table)
         .delete()
         .eq("id", id)

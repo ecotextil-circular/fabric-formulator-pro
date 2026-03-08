@@ -44,6 +44,36 @@ export type Database = {
         }
         Relationships: []
       }
+      itens_salvos: {
+        Row: {
+          created_at: string
+          dados: Json
+          id: string
+          tipo: string
+          titulo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dados?: Json
+          id?: string
+          tipo: string
+          titulo?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dados?: Json
+          id?: string
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       mapas_mentais: {
         Row: {
           created_at: string
