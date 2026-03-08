@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Target, Plus, Trash2, CheckCircle2, Save, Loader2, List, Eye, X, Eraser } from "lucide-react";
+import SectionBanner, { SECTION_BANNERS } from "@/components/SectionBanner";
 import { toast } from "sonner";
 import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
 import { useAuth } from "@/contexts/AuthContext";
