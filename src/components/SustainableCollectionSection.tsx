@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Save, Eraser, Eye, X, List, Trash2, Leaf, Calculator } from "lucide-react";
+import { Sparkles, Save, Eraser, Eye, X, List, Trash2, Leaf, Calculator, Download, Image, FileText, Video } from "lucide-react";
 import { toast } from "sonner";
 import { useItensSalvos } from "@/hooks/useItensSalvos";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const PECAS_TIPOS = ["Calça","Saia Curta","Saia Midi","Saia Longa","Blusa de Manga Longa","Blusa de Manga Curta","Bermuda","Jaqueta","Casaco","T-shirt","Cropped","Calcinha","Sutiã","Vestido","Macacão","Conjunto","Regata","Body"];
 const TAMANHOS = ["PP","P","M","G","G1","G2","G3","G4","34","36","38","40","42","44","46","48","50","52","54","56","XXS","XS","S","M","L","XL","XXL","XXXL"];
 const RESIDUOS_TIPOS = ["Retalhos de tecido","Fios e linhas","Sobras de malha","Aparas de couro","Resíduos de tingimento","Embalagens","Outros"];
+
 const PALETAS = [
   { name: "Terra Natural", colors: ["#5C4033","#8B7355","#C4A35A","#D4C5A9","#C2B280","#A0826D"], desc: "Tons terrosos e naturais" },
   { name: "Verde Sustentável", colors: ["#2D5016","#3A7D44","#69B578","#A7C957","#6B8E23","#8FBC8F"], desc: "Paleta verde inspirada na natureza" },
@@ -21,34 +22,44 @@ const PALETAS = [
   { name: "Lavanda Eco", colors: ["#7B6D8D","#9B8BB4","#C8B8DB","#8E7FB0","#B0A0C8","#D8CCE8"], desc: "Tons suaves de lavanda" },
   { name: "Rosa Orgânico", colors: ["#D4A5A5","#E8B4B8","#F0C2C2","#C97B7B","#B56E6E","#A35D5D"], desc: "Rosa natural e orgânico" },
   { name: "Mostarda & Âmbar", colors: ["#D4A017","#C68E17","#B8860B","#DAA520","#E8A317","#F0C420"], desc: "Tons quentes de mostarda" },
+  { name: "Sunset Tropical", colors: ["#FF6F61","#FF8C42","#FFD166","#F4845F","#E76F51","#E9C46A"], desc: "Cores vibrantes do pôr do sol" },
+  { name: "Menta & Eucalipto", colors: ["#A8DADC","#457B9D","#1D3557","#E8F5E9","#81C784","#4CAF50"], desc: "Frescor natural de menta" },
+  { name: "Nude & Pele", colors: ["#E8C7A0","#D4A574","#C4956A","#B08968","#9C7A5A","#8D6748"], desc: "Tons de pele universais" },
+  { name: "Terracota & Argila", colors: ["#C1440E","#D4602C","#E07C4E","#CC704B","#A05A2C","#8B4513"], desc: "Tons quentes de terracota" },
+  { name: "Azul Denim", colors: ["#1A237E","#283593","#3949AB","#5C6BC0","#7986CB","#9FA8DA"], desc: "Variações de azul jeans" },
+  { name: "Floresta Tropical", colors: ["#004D40","#00695C","#00897B","#26A69A","#4DB6AC","#80CBC4"], desc: "Verde tropical exuberante" },
+  { name: "Pastel Suave", colors: ["#FFD3E0","#C5CAE9","#B2EBF2","#DCEDC8","#FFF9C4","#F8BBD0"], desc: "Cores pastel delicadas" },
+  { name: "Vinho & Burgundy", colors: ["#4A0E0E","#6B1D1D","#8B2252","#722F37","#800020","#A52A2A"], desc: "Tons ricos de vinho" },
 ];
 
 const ALL_COLORS: { hex: string; name: string }[] = [
   // Brancos e Cremes
-  { hex: "#FFFFFF", name: "Branco" }, { hex: "#FFFAF0", name: "Branco Floral" }, { hex: "#FFF8DC", name: "Creme Cornsilk" }, { hex: "#F5F5DC", name: "Bege" }, { hex: "#F5E6CC", name: "Creme" }, { hex: "#FAF0E6", name: "Linho" },
+  { hex: "#FFFFFF", name: "Branco" }, { hex: "#FFFAF0", name: "Branco Floral" }, { hex: "#FFF8DC", name: "Creme Cornsilk" }, { hex: "#F5F5DC", name: "Bege" }, { hex: "#F5E6CC", name: "Creme" }, { hex: "#FAF0E6", name: "Linho" }, { hex: "#FAEBD7", name: "Branco Antigo" }, { hex: "#FFF5EE", name: "Concha" },
   // Amarelos e Dourados
-  { hex: "#FFD700", name: "Ouro" }, { hex: "#F0C420", name: "Amarelo Sol" }, { hex: "#F9A825", name: "Amarelo Ouro" }, { hex: "#DAA520", name: "Ouro Velho" }, { hex: "#D4A017", name: "Mostarda" }, { hex: "#C68E17", name: "Mostarda Escura" }, { hex: "#B8860B", name: "Dourado Escuro" }, { hex: "#E8A317", name: "Âmbar" },
+  { hex: "#FFD700", name: "Ouro" }, { hex: "#F0C420", name: "Amarelo Sol" }, { hex: "#F9A825", name: "Amarelo Ouro" }, { hex: "#DAA520", name: "Ouro Velho" }, { hex: "#D4A017", name: "Mostarda" }, { hex: "#C68E17", name: "Mostarda Escura" }, { hex: "#B8860B", name: "Dourado Escuro" }, { hex: "#E8A317", name: "Âmbar" }, { hex: "#FFF9C4", name: "Amarelo Pastel" }, { hex: "#FFE082", name: "Amarelo Claro" }, { hex: "#FFCA28", name: "Amarelo Vivo" },
   // Laranjas e Pêssego
-  { hex: "#FF8C00", name: "Laranja Escuro" }, { hex: "#F57C00", name: "Laranja" }, { hex: "#FF6F61", name: "Coral Vivo" }, { hex: "#FAD6A5", name: "Pêssego" }, { hex: "#FFAB91", name: "Salmão Claro" }, { hex: "#E57373", name: "Coral Rosa" },
+  { hex: "#FF8C00", name: "Laranja Escuro" }, { hex: "#F57C00", name: "Laranja" }, { hex: "#FF6F61", name: "Coral Vivo" }, { hex: "#FAD6A5", name: "Pêssego" }, { hex: "#FFAB91", name: "Salmão Claro" }, { hex: "#E57373", name: "Coral Rosa" }, { hex: "#FF8C42", name: "Laranja Queimado" }, { hex: "#FFD166", name: "Mel" }, { hex: "#F4845F", name: "Laranja Suave" }, { hex: "#E76F51", name: "Laranja Terra" },
   // Vermelhos
-  { hex: "#DC143C", name: "Carmesim" }, { hex: "#8B0000", name: "Vermelho Escuro" }, { hex: "#800020", name: "Borgonha" }, { hex: "#A35D5D", name: "Terracota Rosa" }, { hex: "#C97B7B", name: "Rosa Queimado" },
+  { hex: "#DC143C", name: "Carmesim" }, { hex: "#8B0000", name: "Vermelho Escuro" }, { hex: "#800020", name: "Borgonha" }, { hex: "#A35D5D", name: "Terracota Rosa" }, { hex: "#C97B7B", name: "Rosa Queimado" }, { hex: "#C1440E", name: "Terracota" }, { hex: "#A52A2A", name: "Marrom Avermelhado" }, { hex: "#722F37", name: "Vinho" },
   // Rosas
-  { hex: "#D4A5A5", name: "Rosa Antigo" }, { hex: "#E8B4B8", name: "Rosa Claro" }, { hex: "#F0C2C2", name: "Rosa Pétala" }, { hex: "#B56E6E", name: "Rosa Seco" }, { hex: "#FFB6C1", name: "Rosa Bebê" }, { hex: "#DB7093", name: "Rosa Médio" },
+  { hex: "#D4A5A5", name: "Rosa Antigo" }, { hex: "#E8B4B8", name: "Rosa Claro" }, { hex: "#F0C2C2", name: "Rosa Pétala" }, { hex: "#B56E6E", name: "Rosa Seco" }, { hex: "#FFB6C1", name: "Rosa Bebê" }, { hex: "#DB7093", name: "Rosa Médio" }, { hex: "#FFD3E0", name: "Rosa Pastel" }, { hex: "#F8BBD0", name: "Rosa Suave" },
   // Roxos e Lavandas
-  { hex: "#4B0082", name: "Índigo" }, { hex: "#6A0DAD", name: "Roxo Escuro" }, { hex: "#7B6D8D", name: "Lavanda Escuro" }, { hex: "#9B8BB4", name: "Lavanda" }, { hex: "#C8B8DB", name: "Lavanda Claro" }, { hex: "#8E7FB0", name: "Lilás" }, { hex: "#B0A0C8", name: "Ametista" }, { hex: "#D8CCE8", name: "Lavanda Suave" },
+  { hex: "#4B0082", name: "Índigo" }, { hex: "#6A0DAD", name: "Roxo Escuro" }, { hex: "#7B6D8D", name: "Lavanda Escuro" }, { hex: "#9B8BB4", name: "Lavanda" }, { hex: "#C8B8DB", name: "Lavanda Claro" }, { hex: "#8E7FB0", name: "Lilás" }, { hex: "#B0A0C8", name: "Ametista" }, { hex: "#D8CCE8", name: "Lavanda Suave" }, { hex: "#C5CAE9", name: "Lavanda Azulado" }, { hex: "#8B2252", name: "Magenta Escuro" },
   // Azuis
-  { hex: "#000080", name: "Azul Marinho" }, { hex: "#1B4965", name: "Azul Noite" }, { hex: "#2980B9", name: "Azul Royal" }, { hex: "#5DADE2", name: "Azul Celeste" }, { hex: "#5B9BD5", name: "Azul Aço" }, { hex: "#2C6E8C", name: "Azul Petróleo" }, { hex: "#3D8DAF", name: "Azul Claro" }, { hex: "#5ABED6", name: "Azul Céu" }, { hex: "#87CEEB", name: "Azul Bebê" }, { hex: "#B0E0E6", name: "Azul Pó" },
+  { hex: "#000080", name: "Azul Marinho" }, { hex: "#1B4965", name: "Azul Noite" }, { hex: "#2980B9", name: "Azul Royal" }, { hex: "#5DADE2", name: "Azul Celeste" }, { hex: "#5B9BD5", name: "Azul Aço" }, { hex: "#2C6E8C", name: "Azul Petróleo" }, { hex: "#3D8DAF", name: "Azul Claro" }, { hex: "#5ABED6", name: "Azul Céu" }, { hex: "#87CEEB", name: "Azul Bebê" }, { hex: "#B0E0E6", name: "Azul Pó" }, { hex: "#1A237E", name: "Azul Escuro" }, { hex: "#283593", name: "Azul Índigo" }, { hex: "#3949AB", name: "Azul Safira" }, { hex: "#5C6BC0", name: "Azul Lavanda" }, { hex: "#7986CB", name: "Azul Suave" }, { hex: "#9FA8DA", name: "Azul Pastel" }, { hex: "#B2EBF2", name: "Ciano Pastel" }, { hex: "#457B9D", name: "Azul Tempestade" }, { hex: "#1D3557", name: "Azul Meia-Noite" },
   // Teais e Turquesas
-  { hex: "#4A8C8C", name: "Teal" }, { hex: "#4A7C91", name: "Teal Escuro" }, { hex: "#6EADC1", name: "Turquesa" }, { hex: "#1B5E50", name: "Verde Petróleo" }, { hex: "#006D5B", name: "Verde Jade" },
+  { hex: "#4A8C8C", name: "Teal" }, { hex: "#4A7C91", name: "Teal Escuro" }, { hex: "#6EADC1", name: "Turquesa" }, { hex: "#1B5E50", name: "Verde Petróleo" }, { hex: "#006D5B", name: "Verde Jade" }, { hex: "#A8DADC", name: "Turquesa Claro" }, { hex: "#80CBC4", name: "Turquesa Suave" }, { hex: "#4DB6AC", name: "Verde Água" }, { hex: "#26A69A", name: "Verde Teal" },
   // Verdes
-  { hex: "#2D5016", name: "Verde Floresta" }, { hex: "#3A7D44", name: "Verde Esmeralda" }, { hex: "#556B2F", name: "Verde Oliva" }, { hex: "#6B8E23", name: "Verde Lima Escuro" }, { hex: "#69B578", name: "Verde Menta" }, { hex: "#A7C957", name: "Verde Abacate" }, { hex: "#8FBC8F", name: "Verde Salvia" }, { hex: "#9CCC65", name: "Verde Claro" }, { hex: "#5D8A5E", name: "Verde Musgo" }, { hex: "#228B22", name: "Verde Floresta Vivo" },
-  // Marrons
-  { hex: "#5C4033", name: "Marrom Escuro" }, { hex: "#8B7355", name: "Marrom Café" }, { hex: "#8D5524", name: "Marrom Terra" }, { hex: "#D2691E", name: "Chocolate" }, { hex: "#8D6E63", name: "Marrom Rosado" }, { hex: "#A0826D", name: "Marrom Claro" }, { hex: "#C4A35A", name: "Dourado Suave" }, { hex: "#C4AE97", name: "Camelo" }, { hex: "#D4C5A9", name: "Areia" }, { hex: "#D5C4B0", name: "Bege Rosado" }, { hex: "#B8A088", name: "Areia Escura" }, { hex: "#9C8B72", name: "Taupe" }, { hex: "#C2B280", name: "Caqui" },
+  { hex: "#2D5016", name: "Verde Floresta" }, { hex: "#3A7D44", name: "Verde Esmeralda" }, { hex: "#556B2F", name: "Verde Oliva" }, { hex: "#6B8E23", name: "Verde Lima Escuro" }, { hex: "#69B578", name: "Verde Menta" }, { hex: "#A7C957", name: "Verde Abacate" }, { hex: "#8FBC8F", name: "Verde Salvia" }, { hex: "#9CCC65", name: "Verde Claro" }, { hex: "#5D8A5E", name: "Verde Musgo" }, { hex: "#228B22", name: "Verde Floresta Vivo" }, { hex: "#004D40", name: "Verde Escuro" }, { hex: "#00695C", name: "Verde Esmeralda Escuro" }, { hex: "#00897B", name: "Verde Mar" }, { hex: "#81C784", name: "Verde Pastel" }, { hex: "#4CAF50", name: "Verde Vivo" }, { hex: "#E8F5E9", name: "Verde Menta Claro" }, { hex: "#DCEDC8", name: "Verde Lima Pastel" },
+  // Marrons e Nudes
+  { hex: "#5C4033", name: "Marrom Escuro" }, { hex: "#8B7355", name: "Marrom Café" }, { hex: "#8D5524", name: "Marrom Terra" }, { hex: "#D2691E", name: "Chocolate" }, { hex: "#8D6E63", name: "Marrom Rosado" }, { hex: "#A0826D", name: "Marrom Claro" }, { hex: "#C4A35A", name: "Dourado Suave" }, { hex: "#C4AE97", name: "Camelo" }, { hex: "#D4C5A9", name: "Areia" }, { hex: "#D5C4B0", name: "Bege Rosado" }, { hex: "#B8A088", name: "Areia Escura" }, { hex: "#9C8B72", name: "Taupe" }, { hex: "#C2B280", name: "Caqui" }, { hex: "#E8C7A0", name: "Nude Claro" }, { hex: "#D4A574", name: "Nude Médio" }, { hex: "#C4956A", name: "Nude Quente" }, { hex: "#B08968", name: "Nude Escuro" }, { hex: "#9C7A5A", name: "Castanho" }, { hex: "#8D6748", name: "Café" }, { hex: "#8B4513", name: "Sela" },
   // Cinzas
   { hex: "#2F4F4F", name: "Cinza Ardósia" }, { hex: "#6B6B6B", name: "Cinza Escuro" }, { hex: "#808080", name: "Cinza Médio" }, { hex: "#A9A9A9", name: "Cinza" }, { hex: "#C0C0C0", name: "Prata" }, { hex: "#D3D3D3", name: "Cinza Claro" }, { hex: "#E0E0E0", name: "Cinza Pérola" }, { hex: "#BDBDBD", name: "Cinza Neutro" },
   // Preto
   { hex: "#000000", name: "Preto" }, { hex: "#1C1C1C", name: "Preto Suave" }, { hex: "#333333", name: "Carvão" },
 ];
+
+const LIGHT_COLORS = ['#FFFFFF','#FFFAF0','#FFF8DC','#F5F5DC','#F5E6CC','#FAF0E6','#FAEBD7','#FFF5EE','#FFD700','#F0C420','#F9A825','#FAD6A5','#FFAB91','#F0C2C2','#E8B4B8','#FFB6C1','#C8B8DB','#D8CCE8','#87CEEB','#B0E0E6','#D3D3D3','#E0E0E0','#C0C0C0','#D5C4B0','#C4AE97','#A9A9A9','#BDBDBD','#9CCC65','#A7C957','#FFD3E0','#F8BBD0','#C5CAE9','#B2EBF2','#DCEDC8','#FFF9C4','#FFE082','#FFCA28','#FFD166','#A8DADC','#80CBC4','#4DB6AC','#81C784','#E8F5E9','#9FA8DA','#7986CB','#E8C7A0'];
 
 const SustainableCollectionSection = () => {
   const { user } = useAuth();
@@ -102,15 +113,51 @@ const SustainableCollectionSection = () => {
   const toggleTamanho = (t: string) => setTamanhosSelecionados(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
   const getColorName = (hex: string) => ALL_COLORS.find(c => c.hex === hex)?.name || hex;
   const toggleColor = (hex: string) => {
-    const colorName = getColorName(hex);
-    const label = `${colorName} (${hex})`;
     setSelectedColors(prev => prev.includes(hex) ? prev.filter(x => x !== hex) : [...prev, hex]);
     setPaletaCores(prev => {
       const items = prev ? prev.split(', ').filter(Boolean) : [];
       if (items.find(i => i.includes(hex))) return items.filter(i => !i.includes(hex)).join(', ');
-      return [...items, label].join(', ');
+      const colorName = getColorName(hex);
+      return [...items, `${colorName} (${hex})`].join(', ');
     });
   };
+
+  const handleDownloadField = (content: string, fieldName: string, format: string) => {
+    if (!content.trim()) { toast.error("Campo vazio, nada para baixar."); return; }
+    let blob: Blob;
+    let ext: string;
+    if (format === 'pdf') {
+      const html = `<html><head><meta charset="utf-8"><title>${fieldName}</title><style>body{font-family:Arial;padding:40px;white-space:pre-wrap;}</style></head><body><h1>${fieldName}</h1><p>${content}</p></body></html>`;
+      blob = new Blob([html], { type: 'text/html' });
+      ext = 'html';
+      const url = URL.createObjectURL(blob);
+      const win = window.open(url, '_blank');
+      if (win) win.onload = () => win.print();
+      return;
+    } else if (format === 'txt') {
+      blob = new Blob([`${fieldName}\n\n${content}`], { type: 'text/plain' });
+      ext = 'txt';
+    } else {
+      blob = new Blob([`${fieldName}\n\n${content}`], { type: 'text/plain' });
+      ext = 'txt';
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `${fieldName.replace(/\s/g, '_')}.${ext}`; a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`${fieldName} baixado!`);
+  };
+
+  const DownloadButtons = ({ content, fieldName }: { content: string; fieldName: string }) => (
+    <div className="flex gap-2 mt-2 flex-wrap">
+      <button type="button" onClick={() => handleDownloadField(content, fieldName, 'pdf')} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all">
+        <FileText className="w-3 h-3" /> PDF
+      </button>
+      <button type="button" onClick={() => handleDownloadField(content, fieldName, 'txt')} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all">
+        <Download className="w-3 h-3" /> TXT
+      </button>
+    </div>
+  );
 
   const handleSave = async () => {
     if (!nomeColecao.trim()) { toast.error("Nome da coleção é obrigatório."); return; }
@@ -143,13 +190,31 @@ const SustainableCollectionSection = () => {
     { key: "orcamento", label: "Orçamento" }, { key: "design", label: "Design" }, { key: "impacto", label: "Impacto" },
   ];
 
-  // Nome da coleção inline component for non-geral tabs
   const NomeColecaoField = () => (
     <div className="mb-4 p-3 rounded-lg bg-primary/5 border border-primary/20">
       <Label className="text-base font-semibold">Nome da Coleção *</Label>
       <Input value={nomeColecao} onChange={e => setNomeColecao(e.target.value)} placeholder="Ex: Coleção Verão Sustentável" className="bg-background text-base mt-1" />
     </div>
   );
+
+  // Selected colors display component (badges with color square + hex)
+  const SelectedColorsDisplay = () => {
+    if (selectedColors.length === 0) return null;
+    return (
+      <div className="p-3 rounded-xl bg-muted/50 border border-border">
+        <p className="text-sm font-semibold text-foreground mb-2">Cores selecionadas:</p>
+        <div className="flex flex-wrap gap-2">
+          {selectedColors.map(hex => (
+            <div key={hex} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-background border border-border shadow-sm">
+              <span className="w-5 h-5 rounded border border-border/50 shrink-0" style={{ backgroundColor: hex }} />
+              <span className="text-xs font-medium text-foreground">{hex}</span>
+              <button onClick={() => toggleColor(hex)} className="ml-0.5 text-muted-foreground hover:text-destructive text-xs font-bold">×</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <section id="colecao" className="py-16 px-4 section-gradient">
@@ -258,7 +323,12 @@ const SustainableCollectionSection = () => {
             <div className="space-y-6">
               <NomeColecaoField />
               <div><h3 className="text-xl font-bold font-display text-foreground mb-1">Design e Desenvolvimento</h3><p className="text-sm text-muted-foreground">Informações criativas e visuais da coleção</p></div>
+              
+              {/* Selected colors at TOP */}
+              <SelectedColorsDisplay />
+
               <div><Label className="text-base">Paleta de Cores da Coleção</Label><Input value={paletaCores} onChange={e => setPaletaCores(e.target.value)} placeholder="Clique nas cores abaixo ou digite manualmente" className="bg-background text-base" /></div>
+              
               <div>
                 <Label className="text-base mb-2 block">Paletas Predefinidas</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -276,31 +346,29 @@ const SustainableCollectionSection = () => {
               </div>
               <div>
                 <Label className="text-base mb-1 block">Selecione Cores Individuais</Label>
-                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para adicioná-las. A cor e o código hex aparecerão no campo acima e na lista abaixo.</p>
+                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para adicioná-las à paleta.</p>
                 <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1.5">
                   {ALL_COLORS.map((c, i) => (
                     <button key={i} onClick={() => toggleColor(c.hex)} className={`w-full aspect-square rounded border-2 transition-all relative ${selectedColors.includes(c.hex) ? "border-foreground scale-110 shadow-lg z-10" : "border-transparent hover:border-border hover:scale-105"}`} style={{ backgroundColor: c.hex }} title={`${c.name} (${c.hex})`}>
-                      {selectedColors.includes(c.hex) && <div className="absolute inset-0 flex items-center justify-center"><span className="text-xs font-bold drop-shadow-lg" style={{ color: ['#FFFFFF','#FFFAF0','#FFF8DC','#F5F5DC','#F5E6CC','#FAF0E6','#FFD700','#F0C420','#F9A825','#FAD6A5','#FFAB91','#F0C2C2','#E8B4B8','#FFB6C1','#C8B8DB','#D8CCE8','#87CEEB','#B0E0E6','#D3D3D3','#E0E0E0','#C0C0C0','#D5C4B0','#C4AE97','#A9A9A9','#BDBDBD','#9CCC65','#A7C957'].includes(c.hex) ? '#333' : '#fff' }}>✓</span></div>}
+                      {selectedColors.includes(c.hex) && <div className="absolute inset-0 flex items-center justify-center"><span className="text-xs font-bold drop-shadow-lg" style={{ color: LIGHT_COLORS.includes(c.hex) ? '#333' : '#fff' }}>✓</span></div>}
                     </button>
                   ))}
                 </div>
-                {selectedColors.length > 0 && (
-                  <div className="mt-4 p-3 rounded-xl bg-muted/50 border border-border">
-                    <p className="text-sm font-semibold text-foreground mb-2">Cores selecionadas:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedColors.map(hex => (
-                        <div key={hex} className="inline-flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-background border border-border shadow-sm">
-                          <span className="w-5 h-5 rounded border border-border/50 shrink-0" style={{ backgroundColor: hex }} />
-                          <span className="text-xs font-medium text-foreground">{hex}</span>
-                          <button onClick={() => toggleColor(hex)} className="ml-0.5 text-muted-foreground hover:text-destructive text-xs font-bold">×</button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
-              <div><Label className="text-base">Referências Visuais</Label><Textarea value={referenciasVisuais} onChange={e => setReferenciasVisuais(e.target.value)} placeholder="Descreva as inspirações visuais, moodboard..." className="bg-background text-base" /></div>
-              <div><Label className="text-base">Esboços/Croquis</Label><Textarea value={esbocosCroquis} onChange={e => setEsbocosCroquis(e.target.value)} placeholder="Descreva os esboços desenvolvidos..." className="bg-background text-base" /></div>
+
+              {/* Selected colors also at BOTTOM */}
+              <SelectedColorsDisplay />
+
+              <div>
+                <Label className="text-base">Referências Visuais</Label>
+                <Textarea value={referenciasVisuais} onChange={e => setReferenciasVisuais(e.target.value)} placeholder="Descreva as inspirações visuais, moodboard..." className="bg-background text-base" />
+                <DownloadButtons content={referenciasVisuais} fieldName="Referências Visuais" />
+              </div>
+              <div>
+                <Label className="text-base">Esboços/Croquis</Label>
+                <Textarea value={esbocosCroquis} onChange={e => setEsbocosCroquis(e.target.value)} placeholder="Descreva os esboços desenvolvidos..." className="bg-background text-base" />
+                <DownloadButtons content={esbocosCroquis} fieldName="Esboços e Croquis" />
+              </div>
             </div>
           )}
 
@@ -406,21 +474,29 @@ const SustainableCollectionSection = () => {
                   <p className="text-sm text-muted-foreground">Custo: R$ {viewingItem.dados.orcamento.custoTotal?.toFixed(2)} | Margem: {viewingItem.dados.orcamento.margem?.toFixed(1)}%</p>
                 </div>
               )}
-              {viewingItem.dados?.design?.paletaCores && (
-                <div><p className="font-semibold text-foreground mb-1">Design</p>
-                  <p className="text-sm text-muted-foreground">Cores: {viewingItem.dados.design.paletaCores}</p>
+              {viewingItem.dados?.design?.selectedColors?.length > 0 && (
+                <div><p className="font-semibold text-foreground mb-1">Design - Cores</p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {viewingItem.dados.design.selectedColors.map((hex: string) => (
+                      <div key={hex} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-muted border border-border">
+                        <span className="w-4 h-4 rounded" style={{ backgroundColor: hex }} />
+                        <span className="text-xs">{hex}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
               {viewingItem.dados?.impacto && (
                 <div><p className="font-semibold text-foreground mb-1">Impacto Ambiental</p>
                   <p className="text-sm text-muted-foreground">Índice: {viewingItem.dados.impacto.impactoTotal?.toFixed(1)} pts</p>
-                  <p className="text-sm text-muted-foreground">Resíduos: {viewingItem.dados.impacto.residuosEvitados}kg | Água: {viewingItem.dados.impacto.aguaEconomizada}L | CO₂: {viewingItem.dados.impacto.co2Reduzido}kg</p>
                 </div>
               )}
               {viewingItem.dados?.responsaveis && (
                 <div><p className="font-semibold text-foreground mb-1">Responsáveis</p>
-                  <p className="text-sm text-muted-foreground">Design: {viewingItem.dados.responsaveis.respDesign || '-'} | Produção: {viewingItem.dados.responsaveis.respProducao || '-'}</p>
-                  <p className="text-sm text-muted-foreground">Qualidade: {viewingItem.dados.responsaveis.respQualidade || '-'} | Marketing: {viewingItem.dados.responsaveis.respMarketing || '-'}</p>
+                  <p className="text-sm text-muted-foreground">Design: {viewingItem.dados.responsaveis.respDesign || '-'}</p>
+                  <p className="text-sm text-muted-foreground">Produção: {viewingItem.dados.responsaveis.respProducao || '-'}</p>
+                  <p className="text-sm text-muted-foreground">Qualidade: {viewingItem.dados.responsaveis.respQualidade || '-'}</p>
+                  <p className="text-sm text-muted-foreground">Marketing: {viewingItem.dados.responsaveis.respMarketing || '-'}</p>
                 </div>
               )}
             </div>
