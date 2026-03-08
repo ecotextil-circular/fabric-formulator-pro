@@ -100,8 +100,9 @@ const SustainableCollectionSection = () => {
 
   const togglePeca = (p: string) => setPecasSelecionadas(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   const toggleTamanho = (t: string) => setTamanhosSelecionados(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
+  const getColorName = (hex: string) => ALL_COLORS.find(c => c.hex === hex)?.name || hex;
   const toggleColor = (hex: string) => {
-    const colorName = COLOR_MAP[hex] || hex;
+    const colorName = getColorName(hex);
     const label = `${colorName} (${hex})`;
     setSelectedColors(prev => prev.includes(hex) ? prev.filter(x => x !== hex) : [...prev, hex]);
     setPaletaCores(prev => {
