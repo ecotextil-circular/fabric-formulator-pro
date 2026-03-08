@@ -6,53 +6,53 @@
 
 @layer base {
   :root {
-    --background: 36 45% 96%;
-    --foreground: 150 25% 15%;
+    --background: 38 50% 95%;
+    --foreground: 145 30% 12%;
 
-    --card: 38 40% 95%;
-    --card-foreground: 150 25% 15%;
+    --card: 40 45% 93%;
+    --card-foreground: 145 30% 12%;
 
-    --popover: 36 45% 96%;
-    --popover-foreground: 150 25% 15%;
+    --popover: 38 50% 95%;
+    --popover-foreground: 145 30% 12%;
 
-    --primary: 155 60% 25%;
-    --primary-foreground: 36 45% 96%;
+    --primary: 152 65% 28%;
+    --primary-foreground: 40 60% 97%;
 
-    --secondary: 38 35% 89%;
-    --secondary-foreground: 150 30% 12%;
+    --secondary: 35 45% 85%;
+    --secondary-foreground: 145 35% 10%;
 
-    --muted: 35 30% 91%;
-    --muted-foreground: 150 12% 40%;
+    --muted: 36 35% 88%;
+    --muted-foreground: 145 15% 35%;
 
-    --accent: 42 60% 62%;
-    --accent-foreground: 150 30% 12%;
+    --accent: 38 70% 55%;
+    --accent-foreground: 145 35% 10%;
 
-    --destructive: 0 68% 48%;
-    --destructive-foreground: 36 45% 96%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 40 60% 97%;
 
-    --border: 36 28% 85%;
-    --input: 36 28% 85%;
-    --ring: 155 60% 25%;
+    --border: 35 35% 80%;
+    --input: 35 35% 80%;
+    --ring: 152 65% 28%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 38 40% 95%;
-    --sidebar-foreground: 150 30% 12%;
-    --sidebar-primary: 155 60% 25%;
-    --sidebar-primary-foreground: 36 45% 96%;
-    --sidebar-accent: 38 35% 89%;
-    --sidebar-accent-foreground: 150 30% 12%;
-    --sidebar-border: 36 28% 85%;
-    --sidebar-ring: 155 60% 25%;
+    --sidebar-background: 40 45% 93%;
+    --sidebar-foreground: 145 35% 10%;
+    --sidebar-primary: 152 65% 28%;
+    --sidebar-primary-foreground: 40 60% 97%;
+    --sidebar-accent: 35 45% 85%;
+    --sidebar-accent-foreground: 145 35% 10%;
+    --sidebar-border: 35 35% 80%;
+    --sidebar-ring: 152 65% 28%;
 
     /* Custom tokens */
-    --olive: 80 50% 35%;
-    --olive-foreground: 36 45% 96%;
-    --teal: 155 60% 25%;
-    --teal-light: 158 50% 42%;
-    --warm: 32 45% 85%;
-    --warm-dark: 22 40% 35%;
-    --rose-soft: 348 40% 65%;
+    --olive: 78 55% 32%;
+    --olive-foreground: 40 60% 97%;
+    --teal: 152 65% 28%;
+    --teal-light: 155 55% 40%;
+    --warm: 30 55% 80%;
+    --warm-dark: 20 50% 32%;
+    --rose-soft: 345 50% 60%;
 
     font-family: 'DM Sans', sans-serif;
   }
