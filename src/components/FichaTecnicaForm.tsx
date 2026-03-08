@@ -266,10 +266,18 @@ const FichaTecnicaForm = () => {
                 ) : (
                   <iframe src={desenhoPreview} style={{ width: '100%', height: '300px', borderRadius: '8px', border: '1px solid hsl(40,22%,85%)' }} title="PDF Preview" />
                 )}
-                <button type="button" onClick={handleDownloadDesenho} style={{ ...addBtnStyle, marginTop: '10px' }}>
-                  <Download size={16} /> Baixar Desenho
-                </button>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
+                  <button type="button" onClick={handleDownloadDesenho} className="bg-primary text-primary-foreground" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 18px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
+                    <Download size={16} /> Baixar Desenho
+                  </button>
+                  <button type="button" onClick={() => { setDesenhoFile(null); setDesenhoPreview(null); setDesenhoType(""); }} style={{ ...removeBtnStyle, padding: '10px 14px', fontSize: '14px', gap: '6px', display: 'flex', alignItems: 'center' }}>
+                    <Trash2 size={14} /> Remover
+                  </button>
+                </div>
               </div>
+            )}
+            {!desenhoPreview && (
+              <p style={{ fontSize: '13px', marginTop: '8px' }} className="text-muted-foreground">Aceita imagens (PNG, JPEG) e PDF. Máximo 5MB.</p>
             )}
           </div>
 
