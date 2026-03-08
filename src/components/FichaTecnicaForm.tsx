@@ -205,7 +205,7 @@ const FichaTecnicaForm = () => {
     setNomeProduto(""); setReferencia(""); setTipoPeca(""); setOutroTipo("");
     setColecao(""); setDesigner(""); setDataCriacao(""); setObservacoes("");
     setTecidos([]); setAviamentos([]); setAcessorios([]); setMaquinario([]);
-    setSequenciaOperacional([]); setDesenhoFile(null); setDesenhoPreview(null);
+    setSequenciaOperacional([]); setDesenhoFile(null); setDesenhoPreview(null); setDesenhoType(""); setDesenhoStorageUrl("");
     setSelMaquina(""); setOutroMaquina(""); setSelSequencia(""); setOutroSequencia("");
     setSelTecido(""); setOutroTecido(""); setSelAviamento(""); setOutroAviamento("");
     setSelAcessorio(""); setOutroAcessorio("");
