@@ -203,9 +203,9 @@ const SustainableCollectionSection = () => {
     </div>
   );
 
-  const uploadAndAttachFile = async (
+  const uploadFile = async (
     file: File,
-    setField: (value: string | ((prev: string) => string)) => void,
+    setFiles: React.Dispatch<React.SetStateAction<{ emoji: string; name: string; url: string }[]>>,
     emoji: string
   ) => {
     if (!user?.id) {
@@ -225,7 +225,7 @@ const SustainableCollectionSection = () => {
       if (uploadError) throw uploadError;
 
       const { data } = supabase.storage.from("uploads").getPublicUrl(path);
-      setField(prev => (prev ? `${prev}\n${emoji} ${file.name} — ${data.publicUrl}` : `${emoji} ${file.name} — ${data.publicUrl}`));
+      setFiles(prev => [...prev, { emoji, name: file.name, url: data.publicUrl }]);
       toast.success(`Arquivo "${file.name}" enviado!`);
     } catch (error: any) {
       console.error("Erro no upload de arquivo:", error);
