@@ -96,6 +96,8 @@ const SustainableCollectionSection = () => {
   const [referenciasVisuais, setReferenciasVisuais] = useState("");
   const [esbocosCroquis, setEsbocosCroquis] = useState("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [referenciasFiles, setReferenciasFiles] = useState<{ emoji: string; name: string; url: string }[]>([]);
+  const [esbocosFiles, setEsbocosFiles] = useState<{ emoji: string; name: string; url: string }[]>([]);
   const [residuosEvitados, setResiduosEvitados] = useState("0");
   const [aguaEconomizada, setAguaEconomizada] = useState("0");
   const [co2Reduzido, setCo2Reduzido] = useState("0");
@@ -149,20 +151,6 @@ const SustainableCollectionSection = () => {
     toast.success(`${fieldName} baixado!`);
   };
 
-  // Extract uploaded file entries from text (emoji name — url)
-  const extractFiles = (text: string) => {
-    if (!text) return [];
-    const lines = text.split('\n');
-    const files: { emoji: string; name: string; url: string }[] = [];
-    for (const line of lines) {
-      const match = line.match(/^(📄|📎|🎬)\s*(.+?)\s*—\s*(https?:\/\/.+)$/);
-      if (match) {
-        files.push({ emoji: match[1], name: match[2].trim(), url: match[3].trim() });
-      }
-    }
-    return files;
-  };
-
   const getFileIcon = (emoji: string) => {
     if (emoji === '📄') return <FileText className="w-4 h-4 text-red-500" />;
     if (emoji === '📎') return <Image className="w-4 h-4 text-blue-500" />;
@@ -177,12 +165,7 @@ const SustainableCollectionSection = () => {
     return 'Arquivo';
   };
 
-  const removeFileFromField = (url: string, setField: (value: string | ((prev: string) => string)) => void) => {
-    setField(prev => prev.split('\n').filter(line => !line.includes(url)).join('\n').trim());
-  };
-
-  const FileList = ({ content, setField }: { content: string; setField: (value: string | ((prev: string) => string)) => void }) => {
-    const files = extractFiles(content);
+  const FileList = ({ files, setFiles }: { files: { emoji: string; name: string; url: string }[]; setFiles: React.Dispatch<React.SetStateAction<{ emoji: string; name: string; url: string }[]>> }) => {
     if (files.length === 0) return null;
     return (
       <div className="mt-3 space-y-2">
@@ -200,7 +183,7 @@ const SustainableCollectionSection = () => {
             <a href={f.url} download className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all" onClick={e => e.stopPropagation()}>
               <Download className="w-3 h-3" /> Baixar
             </a>
-            <button onClick={() => removeFileFromField(f.url, setField)} className="p-1.5 text-muted-foreground hover:text-destructive rounded transition-all">
+            <button onClick={() => setFiles(prev => prev.filter((_, idx) => idx !== i))} className="p-1.5 text-muted-foreground hover:text-destructive rounded transition-all">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -220,9 +203,9 @@ const SustainableCollectionSection = () => {
     </div>
   );
 
-  const uploadAndAttachFile = async (
+  const uploadFile = async (
     file: File,
-    setField: (value: string | ((prev: string) => string)) => void,
+    setFiles: React.Dispatch<React.SetStateAction<{ emoji: string; name: string; url: string }[]>>,
     emoji: string
   ) => {
     if (!user?.id) {
@@ -242,7 +225,7 @@ const SustainableCollectionSection = () => {
       if (uploadError) throw uploadError;
 
       const { data } = supabase.storage.from("uploads").getPublicUrl(path);
-      setField(prev => (prev ? `${prev}\n${emoji} ${file.name} — ${data.publicUrl}` : `${emoji} ${file.name} — ${data.publicUrl}`));
+      setFiles(prev => [...prev, { emoji, name: file.name, url: data.publicUrl }]);
       toast.success(`Arquivo "${file.name}" enviado!`);
     } catch (error: any) {
       console.error("Erro no upload de arquivo:", error);
@@ -257,7 +240,7 @@ const SustainableCollectionSection = () => {
       residuos: { tipoResiduo, quantidadeDisponivel, unidade, origemResiduo, caracteristicas },
       pecas: { pecasSelecionadas, outrosTipos, qtdTotalPecas, descricaoPecas, tecnicasUpcycling, tamanhosSelecionados, outrosTamanhos },
       orcamento: { materiaPrima, maoDeObra, equipamentos, marketing, precoVenda, custoTotal, margem, roi },
-      design: { paletaCores, referenciasVisuais, esbocosCroquis, selectedColors },
+      design: { paletaCores, referenciasVisuais, esbocosCroquis, selectedColors, referenciasFiles, esbocosFiles },
       impacto: { residuosEvitados, aguaEconomizada, co2Reduzido, impactoTotal },
       responsaveis: { respDesign, respProducao, respQualidade, respMarketing },
     };
@@ -270,7 +253,7 @@ const SustainableCollectionSection = () => {
     setTipoResiduo(""); setQuantidadeDisponivel("0"); setUnidade("kg"); setOrigemResiduo(""); setCaracteristicas("");
     setPecasSelecionadas([]); setOutrosTipos(""); setQtdTotalPecas("0"); setDescricaoPecas(""); setTecnicasUpcycling(""); setTamanhosSelecionados([]); setOutrosTamanhos("");
     setMateriaPrima("0"); setMaoDeObra("0"); setEquipamentos("0"); setMarketing("0"); setPrecoVenda("0");
-    setPaletaCores(""); setReferenciasVisuais(""); setEsbocosCroquis(""); setSelectedColors([]);
+    setPaletaCores(""); setReferenciasVisuais(""); setEsbocosCroquis(""); setSelectedColors([]); setReferenciasFiles([]); setEsbocosFiles([]);
     setResiduosEvitados("0"); setAguaEconomizada("0"); setCo2Reduzido("0");
     setRespDesign(""); setRespProducao(""); setRespQualidade(""); setRespMarketing("");
     toast.success("Campos limpos!");
@@ -459,25 +442,25 @@ const SustainableCollectionSection = () => {
                     <FileText className="w-3 h-3" /> PDF
                     <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📄");
+                      if (file) await uploadFile(file, setReferenciasFiles, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
                     <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📎");
+                      if (file) await uploadFile(file, setReferenciasFiles, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
                     <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "🎬");
+                      if (file) await uploadFile(file, setReferenciasFiles, "🎬");
                     }} />
                   </label>
                 </div>
-                <FileList content={referenciasVisuais} setField={setReferenciasVisuais} />
+                <FileList files={referenciasFiles} setFiles={setReferenciasFiles} />
               </div>
               <div>
                 <Label className="text-base">Esboços/Croquis</Label>
@@ -488,25 +471,25 @@ const SustainableCollectionSection = () => {
                     <FileText className="w-3 h-3" /> PDF
                     <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📄");
+                      if (file) await uploadFile(file, setEsbocosFiles, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
                     <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📎");
+                      if (file) await uploadFile(file, setEsbocosFiles, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
                     <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "🎬");
+                      if (file) await uploadFile(file, setEsbocosFiles, "🎬");
                     }} />
                   </label>
                 </div>
-                <FileList content={esbocosCroquis} setField={setEsbocosCroquis} />
+                <FileList files={esbocosFiles} setFiles={setEsbocosFiles} />
               </div>
             </div>
           )}
@@ -626,10 +609,10 @@ const SustainableCollectionSection = () => {
                 </div>
               )}
               {/* Show uploaded files from design fields */}
-              {(extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').length > 0 || extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').length > 0) && (
+              {((viewingItem.dados?.design?.referenciasFiles || []).length > 0 || (viewingItem.dados?.design?.esbocosFiles || []).length > 0) && (
                 <div>
                   <p className="font-semibold text-foreground mb-2">Arquivos Enviados</p>
-                  {extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').map((f: any, i: number) => (
+                  {(viewingItem.dados?.design?.referenciasFiles || []).map((f: any, i: number) => (
                     <a key={`ref-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
                       {getFileIcon(f.emoji)}
                       <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
@@ -637,7 +620,7 @@ const SustainableCollectionSection = () => {
                       <Eye className="w-3.5 h-3.5 text-primary" />
                     </a>
                   ))}
-                  {extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').map((f: any, i: number) => (
+                  {(viewingItem.dados?.design?.esbocosFiles || []).map((f: any, i: number) => (
                     <a key={`esb-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
                       {getFileIcon(f.emoji)}
                       <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
