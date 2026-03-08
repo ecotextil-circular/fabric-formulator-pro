@@ -98,27 +98,47 @@ const FichaTecnicaForm = () => {
   const [selAcessorio, setSelAcessorio] = useState("");
   const [outroAcessorio, setOutroAcessorio] = useState("");
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { toast.error('Arquivo muito grande (máximo 5MB)'); return; }
-    setDesenhoFile(file);
-    setDesenhoType(file.type);
-    if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = (ev) => setDesenhoPreview(ev.target?.result as string);
-      reader.readAsDataURL(file);
-    } else if (file.type === "application/pdf") {
-      setDesenhoPreview(URL.createObjectURL(file));
+    if (!file || !user?.id) return;
+    if (file.size > 20 * 1024 * 1024) { toast.error('Arquivo muito grande (máximo 20MB)'); return; }
+
+    try {
+      const safeName = file.name.replace(/\s+/g, "-").toLowerCase();
+      const path = `${user.id}/fichas/${Date.now()}-${safeName}`;
+      const { error: uploadError } = await supabase.storage.from("uploads").upload(path, file, { upsert: false });
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("uploads").getPublicUrl(path);
+      setDesenhoStorageUrl(data.publicUrl);
+      setDesenhoFile(file);
+      setDesenhoType(file.type);
+
+      if (file.type.startsWith("image/") || file.type === "application/pdf") {
+        setDesenhoPreview(URL.createObjectURL(file));
+      } else {
+        setDesenhoPreview(null);
+      }
+
+      toast.success(`Arquivo "${file.name}" enviado com sucesso!`);
+    } catch (error: any) {
+      console.error("Erro no upload do desenho:", error);
+      toast.error(`Erro ao enviar arquivo: ${error?.message || "tente novamente"}`);
     }
   };
 
   const handleDownloadDesenho = () => {
-    if (!desenhoFile) { toast.error('Nenhum desenho para baixar'); return; }
-    const url = URL.createObjectURL(desenhoFile);
+    const downloadUrl = desenhoStorageUrl || (desenhoFile ? URL.createObjectURL(desenhoFile) : "");
+    if (!downloadUrl) { toast.error('Nenhum desenho para baixar'); return; }
+
     const a = document.createElement("a");
-    a.href = url; a.download = desenhoFile.name; a.click();
-    URL.revokeObjectURL(url);
+    a.href = downloadUrl;
+    a.download = desenhoFile?.name || `desenho-tecnico-${Date.now()}`;
+    a.click();
+
+    if (!desenhoStorageUrl) {
+      URL.revokeObjectURL(downloadUrl);
+    }
   };
 
   const handleDownloadFicha = () => {
