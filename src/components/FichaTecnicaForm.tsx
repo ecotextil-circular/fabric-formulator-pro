@@ -11,6 +11,44 @@ const TIPOS_PECA = [
   "Lingerie", "Outros"
 ];
 
+const MAQUINARIO_OPCOES = [
+  "Overloque", "Reta Industrial", "Colarete", "Botoneira", "Caseadeira",
+  "Galoneira", "Interloque", "Prespontadeira", "Travete", "Máquina de Corte",
+  "Enfestadeira", "Prensa Térmica", "Bordadeira Industrial", "Máquina de Passar",
+  "Refiladeira", "Elastiqueira", "Fechadeira de Braço", "Outros"
+];
+
+const SEQUENCIA_OPCOES = [
+  "Cortar tecido", "Separar peças", "Marcar piques", "Fechar ombro",
+  "Fechar lateral", "Pregar manga", "Fazer barra", "Pregar gola",
+  "Pregar punho", "Fazer cós", "Pregar elástico", "Pregar zíper",
+  "Pregar botão", "Fazer casa de botão", "Pregar etiqueta",
+  "Fazer acabamento", "Passar peça", "Embalar", "Revisão de qualidade",
+  "Pregar viés", "Rebater costura", "Pespontar", "Pregar bolso",
+  "Outros"
+];
+
+const TECIDO_OPCOES = [
+  "Malha", "Viscolycra", "Suplex", "Cotton", "Moletom", "Ribana",
+  "Helanca", "Dry Fit", "Crepe", "Cetim", "Chiffon", "Organza",
+  "Tule", "Renda", "Jeans/Denim", "Sarja", "Linho", "Seda",
+  "Tricoline", "Oxford", "Tactel", "Lycra", "Piquet", "Neoprene",
+  "Jacquard", "Veludo", "Cambraia", "Outros"
+];
+
+const AVIAMENTO_OPCOES = [
+  "Linha", "Botão", "Zíper", "Elástico", "Viés", "Fita",
+  "Entretela", "Ilhós", "Rebite", "Colchete", "Velcro",
+  "Cordão", "Cadarço", "Fivela", "Argola", "Regulador",
+  "Etiqueta", "Tag", "Outros"
+];
+
+const ACESSORIO_OPCOES = [
+  "Fivela", "Argola", "Mosquetão", "Ilhós", "Rebite", "Strass",
+  "Pedraria", "Aplique", "Patch", "Bordado", "Transfer",
+  "Corrente", "Pingente", "Botão Decorativo", "Outros"
+];
+
 interface Tecido { nome: string; composicao: string; largura: string; fornecedor: string; }
 interface Aviamento { tipo: string; cor: string; tamanho: string; quantidade: string; }
 
@@ -21,6 +59,7 @@ const smallInputStyle: React.CSSProperties = { ...inputStyle, flex: 1, minWidth:
 const labelStyle: React.CSSProperties = { fontWeight: '600', color: 'hsl(160, 12%, 40%)', fontSize: '14px', marginBottom: '4px', display: 'block', overflow: 'visible', whiteSpace: 'normal', wordBreak: 'keep-all' };
 const addBtnStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', backgroundColor: 'hsl(42, 40%, 86%)', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600', color: 'hsl(160, 12%, 40%)' };
 const removeBtnStyle: React.CSSProperties = { padding: '6px', backgroundColor: 'hsl(0, 80%, 94%)', border: 'none', borderRadius: '6px', cursor: 'pointer', color: 'hsl(0, 65%, 52%)', display: 'flex', alignItems: 'center' };
+const selectStyle: React.CSSProperties = { ...inputStyle, cursor: 'pointer', backgroundColor: '#fff' };
 
 const FichaTecnicaForm = () => {
   const { user } = useAuth();
@@ -44,6 +83,18 @@ const FichaTecnicaForm = () => {
   const [sequenciaOperacional, setSequenciaOperacional] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [viewingFicha, setViewingFicha] = useState<any>(null);
+
+  // Select states for adding with dropdown
+  const [selMaquina, setSelMaquina] = useState("");
+  const [outroMaquina, setOutroMaquina] = useState("");
+  const [selSequencia, setSelSequencia] = useState("");
+  const [outroSequencia, setOutroSequencia] = useState("");
+  const [selTecido, setSelTecido] = useState("");
+  const [outroTecido, setOutroTecido] = useState("");
+  const [selAviamento, setSelAviamento] = useState("");
+  const [outroAviamento, setOutroAviamento] = useState("");
+  const [selAcessorio, setSelAcessorio] = useState("");
+  const [outroAcessorio, setOutroAcessorio] = useState("");
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -130,7 +181,45 @@ const FichaTecnicaForm = () => {
     setColecao(""); setDesigner(""); setDataCriacao(""); setObservacoes("");
     setTecidos([]); setAviamentos([]); setAcessorios([]); setMaquinario([]);
     setSequenciaOperacional([]); setDesenhoFile(null); setDesenhoPreview(null);
+    setSelMaquina(""); setOutroMaquina(""); setSelSequencia(""); setOutroSequencia("");
+    setSelTecido(""); setOutroTecido(""); setSelAviamento(""); setOutroAviamento("");
+    setSelAcessorio(""); setOutroAcessorio("");
     toast.success("Formulário limpo!");
+  };
+
+  const addMaquina = () => {
+    const val = selMaquina === "Outros" ? outroMaquina.trim() : selMaquina;
+    if (!val) { toast.error("Selecione ou digite uma máquina"); return; }
+    setMaquinario([...maquinario, val]);
+    setSelMaquina(""); setOutroMaquina("");
+  };
+
+  const addSequencia = () => {
+    const val = selSequencia === "Outros" ? outroSequencia.trim() : selSequencia;
+    if (!val) { toast.error("Selecione ou digite uma etapa"); return; }
+    setSequenciaOperacional([...sequenciaOperacional, val]);
+    setSelSequencia(""); setOutroSequencia("");
+  };
+
+  const addTecidoFromSelect = () => {
+    const nome = selTecido === "Outros" ? outroTecido.trim() : selTecido;
+    if (!nome) { toast.error("Selecione ou digite um tecido"); return; }
+    setTecidos([...tecidos, { nome, composicao: '', largura: '', fornecedor: '' }]);
+    setSelTecido(""); setOutroTecido("");
+  };
+
+  const addAviamentoFromSelect = () => {
+    const tipo = selAviamento === "Outros" ? outroAviamento.trim() : selAviamento;
+    if (!tipo) { toast.error("Selecione ou digite um aviamento"); return; }
+    setAviamentos([...aviamentos, { tipo, cor: '', tamanho: '', quantidade: '' }]);
+    setSelAviamento(""); setOutroAviamento("");
+  };
+
+  const addAcessorioFromSelect = () => {
+    const val = selAcessorio === "Outros" ? outroAcessorio.trim() : selAcessorio;
+    if (!val) { toast.error("Selecione ou digite um acessório"); return; }
+    setAcessorios([...acessorios, val]);
+    setSelAcessorio(""); setOutroAcessorio("");
   };
 
   return (
@@ -152,7 +241,7 @@ const FichaTecnicaForm = () => {
               <div><label style={labelStyle}>Referência / Código</label><input style={inputStyle} value={referencia} onChange={e => setReferencia(e.target.value)} placeholder="Ex: REF-001" /></div>
               <div>
                 <label style={labelStyle}>Tipo de Peça *</label>
-                <select style={inputStyle} value={tipoPeca} onChange={e => setTipoPeca(e.target.value)}>
+                <select style={selectStyle} value={tipoPeca} onChange={e => setTipoPeca(e.target.value)}>
                   <option value="">Selecione...</option>
                   {TIPOS_PECA.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
@@ -184,8 +273,25 @@ const FichaTecnicaForm = () => {
             )}
           </div>
 
+          {/* TECIDOS */}
           <div style={sectionStyle}>
             <div style={sectionTitle}>🧵 Tecidos</div>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '180px' }}>
+                <label style={labelStyle}>Selecionar Tecido</label>
+                <select style={selectStyle} value={selTecido} onChange={e => setSelTecido(e.target.value)}>
+                  <option value="">Escolha...</option>
+                  {TECIDO_OPCOES.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              {selTecido === "Outros" && (
+                <div style={{ flex: 1, minWidth: '150px' }}>
+                  <label style={labelStyle}>Outro tecido</label>
+                  <input style={inputStyle} value={outroTecido} onChange={e => setOutroTecido(e.target.value)} placeholder="Digite o tecido" />
+                </div>
+              )}
+              <button type="button" style={addBtnStyle} onClick={addTecidoFromSelect}><Plus size={14} /> Adicionar</button>
+            </div>
             {tecidos.map((t, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input style={smallInputStyle} placeholder="Nome" value={t.nome} onChange={e => { const n = [...tecidos]; n[i].nome = e.target.value; setTecidos(n); }} />
@@ -195,11 +301,27 @@ const FichaTecnicaForm = () => {
                 <button type="button" style={removeBtnStyle} onClick={() => setTecidos(tecidos.filter((_, j) => j !== i))}><Trash2 size={14} /></button>
               </div>
             ))}
-            <button type="button" style={addBtnStyle} onClick={() => setTecidos([...tecidos, { nome: '', composicao: '', largura: '', fornecedor: '' }])}><Plus size={14} /> Adicionar Tecido</button>
           </div>
 
+          {/* AVIAMENTOS */}
           <div style={sectionStyle}>
             <div style={sectionTitle}>🪡 Aviamentos</div>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '180px' }}>
+                <label style={labelStyle}>Selecionar Aviamento</label>
+                <select style={selectStyle} value={selAviamento} onChange={e => setSelAviamento(e.target.value)}>
+                  <option value="">Escolha...</option>
+                  {AVIAMENTO_OPCOES.map(a => <option key={a} value={a}>{a}</option>)}
+                </select>
+              </div>
+              {selAviamento === "Outros" && (
+                <div style={{ flex: 1, minWidth: '150px' }}>
+                  <label style={labelStyle}>Outro aviamento</label>
+                  <input style={inputStyle} value={outroAviamento} onChange={e => setOutroAviamento(e.target.value)} placeholder="Digite o aviamento" />
+                </div>
+              )}
+              <button type="button" style={addBtnStyle} onClick={addAviamentoFromSelect}><Plus size={14} /> Adicionar</button>
+            </div>
             {aviamentos.map((a, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input style={smallInputStyle} placeholder="Tipo" value={a.tipo} onChange={e => { const n = [...aviamentos]; n[i].tipo = e.target.value; setAviamentos(n); }} />
@@ -209,33 +331,81 @@ const FichaTecnicaForm = () => {
                 <button type="button" style={removeBtnStyle} onClick={() => setAviamentos(aviamentos.filter((_, j) => j !== i))}><Trash2 size={14} /></button>
               </div>
             ))}
-            <button type="button" style={addBtnStyle} onClick={() => setAviamentos([...aviamentos, { tipo: '', cor: '', tamanho: '', quantidade: '' }])}><Plus size={14} /> Adicionar Aviamento</button>
           </div>
 
+          {/* ACESSÓRIOS */}
           <div style={sectionStyle}>
             <div style={sectionTitle}>💎 Acessórios</div>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '180px' }}>
+                <label style={labelStyle}>Selecionar Acessório</label>
+                <select style={selectStyle} value={selAcessorio} onChange={e => setSelAcessorio(e.target.value)}>
+                  <option value="">Escolha...</option>
+                  {ACESSORIO_OPCOES.map(a => <option key={a} value={a}>{a}</option>)}
+                </select>
+              </div>
+              {selAcessorio === "Outros" && (
+                <div style={{ flex: 1, minWidth: '150px' }}>
+                  <label style={labelStyle}>Outro acessório</label>
+                  <input style={inputStyle} value={outroAcessorio} onChange={e => setOutroAcessorio(e.target.value)} placeholder="Digite o acessório" />
+                </div>
+              )}
+              <button type="button" style={addBtnStyle} onClick={addAcessorioFromSelect}><Plus size={14} /> Adicionar</button>
+            </div>
             {acessorios.map((a, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input style={smallInputStyle} placeholder="Acessório" value={a} onChange={e => { const n = [...acessorios]; n[i] = e.target.value; setAcessorios(n); }} />
                 <button type="button" style={removeBtnStyle} onClick={() => setAcessorios(acessorios.filter((_, j) => j !== i))}><Trash2 size={14} /></button>
               </div>
             ))}
-            <button type="button" style={addBtnStyle} onClick={() => setAcessorios([...acessorios, ''])}><Plus size={14} /> Adicionar Acessório</button>
           </div>
 
+          {/* MAQUINÁRIO */}
           <div style={sectionStyle}>
             <div style={sectionTitle}>⚙️ Maquinário Necessário</div>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '180px' }}>
+                <label style={labelStyle}>Selecionar Máquina</label>
+                <select style={selectStyle} value={selMaquina} onChange={e => setSelMaquina(e.target.value)}>
+                  <option value="">Escolha...</option>
+                  {MAQUINARIO_OPCOES.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+              {selMaquina === "Outros" && (
+                <div style={{ flex: 1, minWidth: '150px' }}>
+                  <label style={labelStyle}>Outra máquina</label>
+                  <input style={inputStyle} value={outroMaquina} onChange={e => setOutroMaquina(e.target.value)} placeholder="Digite o nome da máquina" />
+                </div>
+              )}
+              <button type="button" style={addBtnStyle} onClick={addMaquina}><Plus size={14} /> Adicionar</button>
+            </div>
             {maquinario.map((m, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input style={smallInputStyle} placeholder="Máquina" value={m} onChange={e => { const n = [...maquinario]; n[i] = e.target.value; setMaquinario(n); }} />
                 <button type="button" style={removeBtnStyle} onClick={() => setMaquinario(maquinario.filter((_, j) => j !== i))}><Trash2 size={14} /></button>
               </div>
             ))}
-            <button type="button" style={addBtnStyle} onClick={() => setMaquinario([...maquinario, ''])}><Plus size={14} /> Adicionar Máquina</button>
           </div>
 
+          {/* SEQUÊNCIA OPERACIONAL */}
           <div style={sectionStyle}>
             <div style={sectionTitle}>📐 Sequência Operacional</div>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '180px' }}>
+                <label style={labelStyle}>Selecionar Etapa</label>
+                <select style={selectStyle} value={selSequencia} onChange={e => setSelSequencia(e.target.value)}>
+                  <option value="">Escolha...</option>
+                  {SEQUENCIA_OPCOES.map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+              {selSequencia === "Outros" && (
+                <div style={{ flex: 1, minWidth: '150px' }}>
+                  <label style={labelStyle}>Outra etapa</label>
+                  <input style={inputStyle} value={outroSequencia} onChange={e => setOutroSequencia(e.target.value)} placeholder="Digite a etapa" />
+                </div>
+              )}
+              <button type="button" style={addBtnStyle} onClick={addSequencia}><Plus size={14} /> Adicionar</button>
+            </div>
             {sequenciaOperacional.map((s, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <span style={{ fontWeight: '700', fontSize: '14px', minWidth: '28px' }} className="text-muted-foreground">{i + 1}.</span>
@@ -243,7 +413,6 @@ const FichaTecnicaForm = () => {
                 <button type="button" style={removeBtnStyle} onClick={() => setSequenciaOperacional(sequenciaOperacional.filter((_, j) => j !== i))}><Trash2 size={14} /></button>
               </div>
             ))}
-            <button type="button" style={addBtnStyle} onClick={() => setSequenciaOperacional([...sequenciaOperacional, ''])}><Plus size={14} /> Adicionar Etapa</button>
           </div>
 
           <div style={sectionStyle}>
