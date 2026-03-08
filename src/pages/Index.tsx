@@ -11,6 +11,7 @@ import SustainableCollectionSection from "@/components/SustainableCollectionSect
 import ChecklistSection from "@/components/ChecklistSection";
 import AchievementsSection from "@/components/AchievementsSection";
 import MindMapSection from "@/components/MindMapSection";
+import FreeToolsSection from "@/components/FreeToolsSection";
 import ScrollReveal from "@/components/ScrollReveal";
 import { Recycle } from "lucide-react";
 
