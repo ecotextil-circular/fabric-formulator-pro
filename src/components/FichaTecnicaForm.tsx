@@ -77,6 +77,7 @@ const FichaTecnicaForm = () => {
   const [desenhoFile, setDesenhoFile] = useState<File | null>(null);
   const [desenhoPreview, setDesenhoPreview] = useState<string | null>(null);
   const [desenhoType, setDesenhoType] = useState<string>("");
+  const [desenhoStorageUrl, setDesenhoStorageUrl] = useState<string>("");
   const [tecidos, setTecidos] = useState<Tecido[]>([]);
   const [aviamentos, setAviamentos] = useState<Aviamento[]>([]);
   const [acessorios, setAcessorios] = useState<string[]>([]);
