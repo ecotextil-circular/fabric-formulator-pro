@@ -62,7 +62,6 @@ const PDCASection = () => {
     <section id="pdca" className="py-16 px-4 section-gradient">
       <div className="max-w-4xl mx-auto">
         <SectionBanner {...SECTION_BANNERS.pdca} />
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
           {PDCA_INFO.map((item) => (
