@@ -96,6 +96,8 @@ const SustainableCollectionSection = () => {
   const [referenciasVisuais, setReferenciasVisuais] = useState("");
   const [esbocosCroquis, setEsbocosCroquis] = useState("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [referenciasFiles, setReferenciasFiles] = useState<{ emoji: string; name: string; url: string }[]>([]);
+  const [esbocosFiles, setEsbocosFiles] = useState<{ emoji: string; name: string; url: string }[]>([]);
   const [residuosEvitados, setResiduosEvitados] = useState("0");
   const [aguaEconomizada, setAguaEconomizada] = useState("0");
   const [co2Reduzido, setCo2Reduzido] = useState("0");
