@@ -244,68 +244,70 @@ const FichaTecnicaForm = () => {
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!validarFormulario()) {
-      return;
-    }
+  if (!user?.id) {
+    toast.error("Você precisa estar autenticado");
+    return;
+  }
 
-    try {
-      setIsLoading(true);
+  if (!validarFormulario()) {
+    return;
+  }
 
-      const tipoFinal = tipoPeca === "Outros" ? outroTipo : tipoPeca;
+  try {
+    setIsLoading(true);
 
-      const dados = {
-        nomeProduto,
-        referencia,
-        tipoPeca: tipoFinal,
-        outroTipo,
-        colecao,
-        designer,
-        observacoes,
+    const tipoFinal = tipoPeca === "Outros" ? outroTipo : tipoPeca;
+
+    const result = await insertItem({
+      projeto_id: user?.id,
+      nome_peca: nomeProduto,
+      materiais: JSON.stringify({
         tecidos,
         aviamentos,
         acessorios,
+      }),
+      medidas: JSON.stringify({
+        referencia,
+        tipoPeca: tipoFinal,
+        colecao,
+        designer,
+        dataCriacao,
+        observacoes,
         maquinario,
         sequenciaOperacional,
-      };
+      }),
+      imagens: desenhoFile ? [desenhoFile.name] : [],
+    } as any);
 
-      const result = await insertItem({
-        user_id: user?.id, // 
-        referencia_codigo: referencia,
-        data_criacao: dataCriacao || null,
-        dados,
-      } as any);
+    if (result) {
+      setNomeProduto("");
+      setReferencia("");
+      setTipoPeca("");
+      setOutroTipo("");
+      setColecao("");
+      setDesigner("");
+      setDataCriacao("");
+      setObservacoes("");
+      setTecidos([]);
+      setAviamentos([]);
+      setAcessorios([]);
+      setMaquinario([]);
+      setSequenciaOperacional([]);
+      setDesenhoFile(null);
+      setDesenhoPreview(null);
 
-      if (result) {
-        // Limpar formulário
-        setNomeProduto("");
-        setReferencia("");
-        setTipoPeca("");
-        setOutroTipo("");
-        setColecao("");
-        setDesigner("");
-        setDataCriacao("");
-        setObservacoes("");
-        setTecidos([]);
-        setAviamentos([]);
-        setAcessorios([]);
-        setMaquinario([]);
-        setSequenciaOperacional([]);
-        setDesenhoFile(null);
-        setDesenhoPreview(null);
-
-        toast.success(`Ficha de "${nomeProduto}" (${tipoFinal}) salva com sucesso!`);
-      }
-    } catch (error) {
-      console.error('Erro ao salvar ficha:', error);
-      toast.error('Erro ao salvar ficha técnica');
-    } finally {
-      setIsLoading(false);
+      toast.success(`Ficha de "${nomeProduto}" salva com sucesso!`);
     }
-  };
-
+  } catch (error) {
+    console.error('Erro ao salvar:', error);
+    toast.error('Erro ao salvar ficha técnica');
+  } finally {
+    setIsLoading(false);
+  }
+};
   const handleLimparFormulario = () => {
     setNomeProduto("");
     setReferencia("");
