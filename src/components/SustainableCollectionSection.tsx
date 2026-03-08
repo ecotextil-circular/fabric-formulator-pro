@@ -401,6 +401,16 @@ const SustainableCollectionSection = () => {
                 <Textarea value={esbocosCroquis} onChange={e => setEsbocosCroquis(e.target.value)} placeholder="Descreva os esboços desenvolvidos..." className="bg-background text-base" />
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <DownloadButtons content={esbocosCroquis} fieldName="Esboços e Croquis" />
+                  <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all cursor-pointer">
+                    <FileText className="w-3 h-3" /> PDF
+                    <input type="file" accept="application/pdf" className="hidden" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setEsbocosCroquis(prev => prev ? `${prev}\n📄 ${file.name}` : `📄 ${file.name}`);
+                        toast.success(`PDF "${file.name}" adicionado!`);
+                      }
+                    }} />
+                  </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
                     <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => {
