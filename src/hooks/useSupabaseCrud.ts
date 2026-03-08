@@ -67,7 +67,7 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: string
     try {
       const { data, error } = await (supabase as any)
         .from(table)
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update({ ...updates })
         .eq("id", id)
         .eq("user_id", user.id)
         .select()
