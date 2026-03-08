@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import toolsHero from "@/assets/tools-hero.jpg";
+import fichaHero from "@/assets/ficha-tools-hero.jpg";
 
 interface ToolCard {
   title: string;
