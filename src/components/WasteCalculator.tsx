@@ -43,11 +43,7 @@ const WasteCalculator = () => {
   return (
     <section id="calculadora" className="py-16 px-4 section-gradient">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4"><Calculator className="w-4 h-4" /> Ferramenta Prática</div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">Calculadora de Resíduos</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-base">Calcule o volume de resíduos têxteis e descubra quanto pode economizar.</p>
-        </div>
+        <SectionBanner {...SECTION_BANNERS.calculadora} />
 
         <Card className="glass-card p-5 rounded-xl mb-8">
           <div className="flex items-start gap-3">

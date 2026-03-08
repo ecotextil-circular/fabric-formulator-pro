@@ -61,15 +61,7 @@ const PDCASection = () => {
   return (
     <section id="pdca" className="py-16 px-4 section-gradient">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <RefreshCw className="w-4 h-4" />
-            Melhoria Contínua
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">Ciclo PDCA</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-base">
-            O PDCA é uma ferramenta de gestão usada para promover a melhoria contínua dos processos.
-          </p>
+        <SectionBanner {...SECTION_BANNERS.pdca} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">

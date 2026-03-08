@@ -282,19 +282,7 @@ const GuidesSection = () => {
   return (
     <section id="guias" className="py-16 px-4 bg-background">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 bg-olive/10 text-olive px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <BookOpen className="w-4 h-4" />
-            Conteúdo Educacional
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">
-            Guia Completo de Economia Circular Têxtil
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
-            Conteúdo baseado nas melhores práticas da indústria têxtil sustentável
-          </p>
-        </div>
+        <SectionBanner {...SECTION_BANNERS.guias} />
 
         {/* Intro Card */}
         <Card className="glass-card p-6 rounded-2xl mb-8 border-primary/20">

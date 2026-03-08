@@ -250,6 +250,9 @@ const FichaTecnicaForm = () => {
 
   return (
     <section id="ficha-tecnica" style={{ padding: '40px 16px', minHeight: '100vh' }} className="bg-background">
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <SectionBanner {...SECTION_BANNERS.ficha} />
+      </div>
       <div style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'hsl(36, 30%, 95%)', padding: '30px', borderRadius: '14px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
         <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '6px', textAlign: 'center' }} className="text-foreground font-display">
           <FileText style={{ display: 'inline', verticalAlign: 'middle', marginRight: '8px' }} size={26} />

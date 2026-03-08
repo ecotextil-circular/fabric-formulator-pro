@@ -42,11 +42,7 @@ const ActionPlanSection = () => {
   return (
     <section id="plano-acao" className="py-16 px-4 bg-background">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-olive/10 text-olive px-4 py-2 rounded-full text-sm font-medium mb-4"><Target className="w-4 h-4" /> Planejamento</div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">Plano de Ação Personalizado</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-base">Crie seu plano de ação com responsáveis, prazos e prioridades.</p>
-        </div>
+        <SectionBanner {...SECTION_BANNERS.plano} />
 
         <Card className="glass-card p-6 md:p-8 rounded-2xl space-y-6">
           <div className="flex flex-col md:flex-row gap-4">

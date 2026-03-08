@@ -81,18 +81,7 @@ const AchievementsSection = () => {
   return (
     <section id="conquistas" className="py-16 px-4 bg-background">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-accent/30 text-foreground px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <Trophy className="w-4 h-4" />
-            Gamificação
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">
-            Conquistas
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Desbloqueie conquistas conforme avança na implementação da economia circular.
-          </p>
-        </div>
+        <SectionBanner {...SECTION_BANNERS.conquistas} />
 
         <Tabs defaultValue="editor" className="w-full">
           <TabsList className="w-full mb-6">
