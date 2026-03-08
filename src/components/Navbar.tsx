@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { href: "#colecao", label: "Coleção" },
   { href: "#checklist", label: "Checklist" },
   { href: "#conquistas", label: "Conquistas" },
+  { href: "#ferramentas", label: "Ferramentas" },
 ];
 
 const Navbar = () => {
