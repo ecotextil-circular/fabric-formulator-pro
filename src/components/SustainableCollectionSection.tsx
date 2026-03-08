@@ -240,7 +240,7 @@ const SustainableCollectionSection = () => {
       residuos: { tipoResiduo, quantidadeDisponivel, unidade, origemResiduo, caracteristicas },
       pecas: { pecasSelecionadas, outrosTipos, qtdTotalPecas, descricaoPecas, tecnicasUpcycling, tamanhosSelecionados, outrosTamanhos },
       orcamento: { materiaPrima, maoDeObra, equipamentos, marketing, precoVenda, custoTotal, margem, roi },
-      design: { paletaCores, referenciasVisuais, esbocosCroquis, selectedColors },
+      design: { paletaCores, referenciasVisuais, esbocosCroquis, selectedColors, referenciasFiles, esbocosFiles },
       impacto: { residuosEvitados, aguaEconomizada, co2Reduzido, impactoTotal },
       responsaveis: { respDesign, respProducao, respQualidade, respMarketing },
     };
