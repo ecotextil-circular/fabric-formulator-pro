@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calculator, Info, TrendingDown, Recycle, DollarSign, Save, Eraser, Eye, X, List, Trash2 } from "lucide-react";
+import SectionBanner, { SECTION_BANNERS } from "@/components/SectionBanner";
 import { toast } from "sonner";
 import { useItensSalvos } from "@/hooks/useItensSalvos";
 import { useAuth } from "@/contexts/AuthContext";
