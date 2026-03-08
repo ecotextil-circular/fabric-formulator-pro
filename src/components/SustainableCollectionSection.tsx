@@ -609,10 +609,10 @@ const SustainableCollectionSection = () => {
                 </div>
               )}
               {/* Show uploaded files from design fields */}
-              {(extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').length > 0 || extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').length > 0) && (
+              {((viewingItem.dados?.design?.referenciasFiles || []).length > 0 || (viewingItem.dados?.design?.esbocosFiles || []).length > 0) && (
                 <div>
                   <p className="font-semibold text-foreground mb-2">Arquivos Enviados</p>
-                  {extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').map((f: any, i: number) => (
+                  {(viewingItem.dados?.design?.referenciasFiles || []).map((f: any, i: number) => (
                     <a key={`ref-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
                       {getFileIcon(f.emoji)}
                       <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
@@ -620,7 +620,7 @@ const SustainableCollectionSection = () => {
                       <Eye className="w-3.5 h-3.5 text-primary" />
                     </a>
                   ))}
-                  {extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').map((f: any, i: number) => (
+                  {(viewingItem.dados?.design?.esbocosFiles || []).map((f: any, i: number) => (
                     <a key={`esb-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
                       {getFileIcon(f.emoji)}
                       <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
