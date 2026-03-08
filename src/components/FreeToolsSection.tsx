@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import toolsHero from "@/assets/tools-hero.jpg";
+import fichaHero from "@/assets/ficha-tools-hero.jpg";
 
 interface ToolCard {
   title: string;
@@ -134,31 +135,35 @@ const ToolCardItem = ({ tool }: { tool: ToolCard }) => (
   </Card>
 );
 
+const TabBanner = ({ image, alt, label, title, description, icon: Icon }: {
+  image: string; alt: string; label: string; title: string; description: string; icon: React.ElementType;
+}) => (
+  <div className="relative rounded-2xl overflow-hidden mb-8 shadow-lg">
+    <img src={image} alt={alt} className="w-full h-48 md:h-64 object-cover" />
+    <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/50 to-transparent flex items-center">
+      <div className="px-8 md:px-12 max-w-xl">
+        <div className="flex items-center gap-2 mb-2">
+          <Icon className="w-5 h-5 text-accent" />
+          <span className="text-xs font-medium text-primary-foreground/80 uppercase tracking-wider">{label}</span>
+        </div>
+        <h3 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2">{title}</h3>
+        <p className="text-primary-foreground/90 text-sm">{description}</p>
+      </div>
+    </div>
+  </div>
+);
+
 const FreeToolsSection = () => {
   return (
     <section id="ferramentas" className="py-16 px-4 section-gradient">
       <div className="max-w-6xl mx-auto">
-        {/* Hero Banner */}
-        <div className="relative rounded-2xl overflow-hidden mb-10 shadow-lg">
-          <img
-            src={toolsHero}
-            alt="Ferramentas criativas para moda e design"
-            className="w-full h-56 md:h-72 object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/50 to-transparent flex items-center">
-            <div className="px-8 md:px-12 max-w-xl">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-5 h-5 text-accent" />
-                <span className="text-sm font-medium text-primary-foreground/80 uppercase tracking-wider">100% Gratuitas</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-3">
-                Dicas de Ferramentas Gratuitas
-              </h2>
-              <p className="text-primary-foreground/90 text-sm md:text-base">
-                Os melhores sites e aplicativos gratuitos para criar artes, logos, materiais visuais e fichas técnicas de moda.
-              </p>
-            </div>
-          </div>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+            Dicas de Ferramentas Gratuitas
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Os melhores sites e aplicativos gratuitos para criar artes, logos, materiais visuais e fichas técnicas de moda.
+          </p>
         </div>
 
         <Tabs defaultValue="design" className="w-full">
@@ -174,6 +179,14 @@ const FreeToolsSection = () => {
           </TabsList>
 
           <TabsContent value="design">
+            <TabBanner
+              image={toolsHero}
+              alt="Ferramentas criativas para artes e logos"
+              label="100% Gratuitas"
+              title="Artes & Identidade Visual"
+              description="Crie logos, posts, banners e materiais visuais profissionais com ferramentas gratuitas e intuitivas."
+              icon={Sparkles}
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {designTools.map((tool) => (
                 <ToolCardItem key={tool.title} tool={tool} />
@@ -182,6 +195,14 @@ const FreeToolsSection = () => {
           </TabsContent>
 
           <TabsContent value="ficha">
+            <TabBanner
+              image={fichaHero}
+              alt="Ferramentas para fichas técnicas de moda"
+              label="Moda & Produção"
+              title="Fichas Técnicas de Moda"
+              description="Ferramentas gratuitas para criar fichas técnicas profissionais, packs de produção e especificações de peças."
+              icon={Scissors}
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {fichaTecnicaTools.map((tool) => (
                 <ToolCardItem key={tool.title} tool={tool} />
