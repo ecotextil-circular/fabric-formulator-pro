@@ -139,13 +139,27 @@ const FreeToolsSection = () => {
   return (
     <section id="ferramentas" className="py-16 px-4 section-gradient">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Dicas de Ferramentas Gratuitas
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Os melhores sites e aplicativos gratuitos para criar artes, logos, materiais visuais e fichas técnicas de moda.
-          </p>
+        {/* Hero Banner */}
+        <div className="relative rounded-2xl overflow-hidden mb-10 shadow-lg">
+          <img
+            src={toolsHero}
+            alt="Ferramentas criativas para moda e design"
+            className="w-full h-56 md:h-72 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/50 to-transparent flex items-center">
+            <div className="px-8 md:px-12 max-w-xl">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-5 h-5 text-accent" />
+                <span className="text-sm font-medium text-primary-foreground/80 uppercase tracking-wider">100% Gratuitas</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-3">
+                Dicas de Ferramentas Gratuitas
+              </h2>
+              <p className="text-primary-foreground/90 text-sm md:text-base">
+                Os melhores sites e aplicativos gratuitos para criar artes, logos, materiais visuais e fichas técnicas de moda.
+              </p>
+            </div>
+          </div>
         </div>
 
         <Tabs defaultValue="design" className="w-full">
