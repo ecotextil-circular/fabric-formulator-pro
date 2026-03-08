@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { Plus, Trash2, Download, Upload, FileText, Loader2, Eye, X, Eraser } from "lucide-react";
 import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const TIPOS_PECA = [
   "Blusa", "Camiseta", "Camisa", "Top", "Vestido", "Saia", "Calça",

@@ -8,6 +8,7 @@ import { Sparkles, Save, Eraser, Eye, X, List, Trash2, Leaf, Calculator, Downloa
 import { toast } from "sonner";
 import { useItensSalvos } from "@/hooks/useItensSalvos";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const PECAS_TIPOS = ["Calça","Saia Curta","Saia Midi","Saia Longa","Blusa de Manga Longa","Blusa de Manga Curta","Bermuda","Jaqueta","Casaco","T-shirt","Cropped","Calcinha","Sutiã","Vestido","Macacão","Conjunto","Regata","Body"];
 const TAMANHOS = ["PP","P","M","G","G1","G2","G3","G4","34","36","38","40","42","44","46","48","50","52","54","56","XXS","XS","S","M","L","XL","XXL","XXXL"];
