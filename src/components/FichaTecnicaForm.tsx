@@ -272,6 +272,7 @@ const FichaTecnicaForm = () => {
       };
 
       const result = await insertItem({
+        user_id: user?.id, // 
         referencia_codigo: referencia,
         data_criacao: dataCriacao || null,
         dados,
