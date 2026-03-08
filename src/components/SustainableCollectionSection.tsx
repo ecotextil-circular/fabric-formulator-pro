@@ -646,6 +646,7 @@ const SustainableCollectionSection = () => {
                     </a>
                   ))}
                 </div>
+              )}
               {viewingItem.dados?.impacto && (
                 <div><p className="font-semibold text-foreground mb-1">Impacto Ambiental</p>
                   <p className="text-sm text-muted-foreground">Índice: {viewingItem.dados.impacto.impactoTotal?.toFixed(1)} pts</p>
