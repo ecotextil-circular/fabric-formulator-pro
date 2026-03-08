@@ -11,6 +11,7 @@ import SustainableCollectionSection from "@/components/SustainableCollectionSect
 import ChecklistSection from "@/components/ChecklistSection";
 import AchievementsSection from "@/components/AchievementsSection";
 import MindMapSection from "@/components/MindMapSection";
+import FreeToolsSection from "@/components/FreeToolsSection";
 import ScrollReveal from "@/components/ScrollReveal";
 import { Recycle } from "lucide-react";
 
@@ -52,6 +53,9 @@ const Index = () => {
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <AchievementsSection />
+        </ScrollReveal>
+        <ScrollReveal>
+          <FreeToolsSection />
         </ScrollReveal>
       </main>
       <footer className="bg-card border-t border-border py-8 px-4">
