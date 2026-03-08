@@ -265,7 +265,7 @@ const SustainableCollectionSection = () => {
                   {PALETAS.map(p => (
                     <Card key={p.name} className="p-3 rounded-xl border border-border cursor-pointer hover:shadow-md" onClick={() => {
                       setSelectedColors(p.colors);
-                      setPaletaCores(p.colors.map(c => `${COLOR_MAP[c] || c} (${c})`).join(', '));
+                      setPaletaCores(p.colors.map(c => `${getColorName(c)} (${c})`).join(', '));
                     }}>
                       <p className="font-semibold text-foreground text-sm mb-1 flex items-center gap-1"><Leaf className="w-3 h-3" /> {p.name}</p>
                       <div className="flex gap-1 mb-1">{p.colors.map((c, i) => <div key={i} className="w-8 h-6 rounded" style={{ backgroundColor: c }} />)}</div>
@@ -276,23 +276,26 @@ const SustainableCollectionSection = () => {
               </div>
               <div>
                 <Label className="text-base mb-1 block">Selecione Cores Individuais</Label>
-                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para selecioná-las. O nome e código da cor aparecerão automaticamente no campo acima.</p>
-                <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
-                  {INDIVIDUAL_COLORS.map((c, i) => (
-                    <button key={i} onClick={() => toggleColor(c)} className={`w-full aspect-square rounded-lg border-2 transition-all relative group ${selectedColors.includes(c) ? "border-foreground scale-110 shadow-lg" : "border-transparent hover:border-border"}`} style={{ backgroundColor: c }} title={`${COLOR_MAP[c]} (${c})`}>
-                      {selectedColors.includes(c) && <div className="absolute inset-0 flex items-center justify-center"><span className="text-white text-xs font-bold drop-shadow-lg">✓</span></div>}
+                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para adicioná-las. A cor e o código hex aparecerão no campo acima e na lista abaixo.</p>
+                <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1.5">
+                  {ALL_COLORS.map((c, i) => (
+                    <button key={i} onClick={() => toggleColor(c.hex)} className={`w-full aspect-square rounded border-2 transition-all relative ${selectedColors.includes(c.hex) ? "border-foreground scale-110 shadow-lg z-10" : "border-transparent hover:border-border hover:scale-105"}`} style={{ backgroundColor: c.hex }} title={`${c.name} (${c.hex})`}>
+                      {selectedColors.includes(c.hex) && <div className="absolute inset-0 flex items-center justify-center"><span className="text-xs font-bold drop-shadow-lg" style={{ color: ['#FFFFFF','#FFFAF0','#FFF8DC','#F5F5DC','#F5E6CC','#FAF0E6','#FFD700','#F0C420','#F9A825','#FAD6A5','#FFAB91','#F0C2C2','#E8B4B8','#FFB6C1','#C8B8DB','#D8CCE8','#87CEEB','#B0E0E6','#D3D3D3','#E0E0E0','#C0C0C0','#D5C4B0','#C4AE97','#A9A9A9','#BDBDBD','#9CCC65','#A7C957'].includes(c.hex) ? '#333' : '#fff' }}>✓</span></div>}
                     </button>
                   ))}
                 </div>
                 {selectedColors.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {selectedColors.map(c => (
-                      <span key={c} className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-foreground">
-                        <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: c }} />
-                        {COLOR_MAP[c] || c} ({c})
-                        <button onClick={() => toggleColor(c)} className="ml-1 text-muted-foreground hover:text-destructive">×</button>
-                      </span>
-                    ))}
+                  <div className="mt-4 p-3 rounded-xl bg-muted/50 border border-border">
+                    <p className="text-sm font-semibold text-foreground mb-2">Cores selecionadas:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedColors.map(hex => (
+                        <div key={hex} className="inline-flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-background border border-border shadow-sm">
+                          <span className="w-5 h-5 rounded border border-border/50 shrink-0" style={{ backgroundColor: hex }} />
+                          <span className="text-xs font-medium text-foreground">{hex}</span>
+                          <button onClick={() => toggleColor(hex)} className="ml-0.5 text-muted-foreground hover:text-destructive text-xs font-bold">×</button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
