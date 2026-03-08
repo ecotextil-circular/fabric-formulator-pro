@@ -362,12 +362,56 @@ const SustainableCollectionSection = () => {
               <div>
                 <Label className="text-base">Referências Visuais</Label>
                 <Textarea value={referenciasVisuais} onChange={e => setReferenciasVisuais(e.target.value)} placeholder="Descreva as inspirações visuais, moodboard..." className="bg-background text-base" />
-                <DownloadButtons content={referenciasVisuais} fieldName="Referências Visuais" />
+                <div className="flex gap-2 mt-2 flex-wrap">
+                  <DownloadButtons content={referenciasVisuais} fieldName="Referências Visuais" />
+                  <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
+                    <Image className="w-3 h-3" /> PNG/JPEG
+                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setReferenciasVisuais(prev => prev ? `${prev}\n📎 ${file.name}` : `📎 ${file.name}`);
+                        toast.success(`Imagem "${file.name}" adicionada!`);
+                      }
+                    }} />
+                  </label>
+                  <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
+                    <Video className="w-3 h-3" /> MP4
+                    <input type="file" accept="video/mp4" className="hidden" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setReferenciasVisuais(prev => prev ? `${prev}\n🎬 ${file.name}` : `🎬 ${file.name}`);
+                        toast.success(`Vídeo "${file.name}" adicionado!`);
+                      }
+                    }} />
+                  </label>
+                </div>
               </div>
               <div>
                 <Label className="text-base">Esboços/Croquis</Label>
                 <Textarea value={esbocosCroquis} onChange={e => setEsbocosCroquis(e.target.value)} placeholder="Descreva os esboços desenvolvidos..." className="bg-background text-base" />
-                <DownloadButtons content={esbocosCroquis} fieldName="Esboços e Croquis" />
+                <div className="flex gap-2 mt-2 flex-wrap">
+                  <DownloadButtons content={esbocosCroquis} fieldName="Esboços e Croquis" />
+                  <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
+                    <Image className="w-3 h-3" /> PNG/JPEG
+                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setEsbocosCroquis(prev => prev ? `${prev}\n📎 ${file.name}` : `📎 ${file.name}`);
+                        toast.success(`Imagem "${file.name}" adicionada!`);
+                      }
+                    }} />
+                  </label>
+                  <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
+                    <Video className="w-3 h-3" /> MP4
+                    <input type="file" accept="video/mp4" className="hidden" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setEsbocosCroquis(prev => prev ? `${prev}\n🎬 ${file.name}` : `🎬 ${file.name}`);
+                        toast.success(`Vídeo "${file.name}" adicionado!`);
+                      }
+                    }} />
+                  </label>
+                </div>
               </div>
             </div>
           )}
