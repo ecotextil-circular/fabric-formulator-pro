@@ -244,7 +244,7 @@ const FichaTecnicaForm = () => {
     return true;
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   if (!user?.id) {
@@ -252,7 +252,13 @@ const FichaTecnicaForm = () => {
     return;
   }
 
-  if (!validarFormulario()) {
+  if (!nomeProduto.trim()) {
+    toast.error("Nome do produto é obrigatório");
+    return;
+  }
+
+  if (!tipoPeca) {
+    toast.error("Tipo de peça é obrigatório");
     return;
   }
 
@@ -261,25 +267,31 @@ const FichaTecnicaForm = () => {
 
     const tipoFinal = tipoPeca === "Outros" ? outroTipo : tipoPeca;
 
+    const materiaisData = {
+      tecidos: tecidos,
+      aviamentos: aviamentos,
+      acessorios: acessorios,
+    };
+
+    const medidasData = {
+      referencia: referencia,
+      tipoPeca: tipoFinal,
+      colecao: colecao,
+      designer: designer,
+      dataCriacao: dataCriacao,
+      observacoes: observacoes,
+      maquinario: maquinario,
+      sequenciaOperacional: sequenciaOperacional,
+    };
+
+    const imagensArray = desenhoFile ? [desenhoFile.name] : [];
+
     const result = await insertItem({
-      projeto_id: user?.id,
+      projeto_id: user.id,
       nome_peca: nomeProduto,
-      materiais: JSON.stringify({
-        tecidos,
-        aviamentos,
-        acessorios,
-      }),
-      medidas: JSON.stringify({
-        referencia,
-        tipoPeca: tipoFinal,
-        colecao,
-        designer,
-        dataCriacao,
-        observacoes,
-        maquinario,
-        sequenciaOperacional,
-      }),
-      imagens: desenhoFile ? [desenhoFile.name] : [],
+      materiais: JSON.stringify(materiaisData),
+      medidas: JSON.stringify(medidasData),
+      imagens: imagensArray,
     } as any);
 
     if (result) {
@@ -298,11 +310,12 @@ const FichaTecnicaForm = () => {
       setSequenciaOperacional([]);
       setDesenhoFile(null);
       setDesenhoPreview(null);
-toast.success(`Ficha de "${nomeProduto}" salva com sucesso!`);
+
+      toast.success("Ficha técnica salva com sucesso!");
     }
   } catch (error) {
-    console.error('Erro ao salvar:', error);
-    toast.error('Erro ao salvar ficha técnica');
+    console.error("Erro ao salvar:", error);
+    toast.error("Erro ao salvar ficha técnica");
   } finally {
     setIsLoading(false);
   }
