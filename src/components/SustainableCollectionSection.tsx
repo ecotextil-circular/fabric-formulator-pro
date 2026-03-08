@@ -162,7 +162,7 @@ const SustainableCollectionSection = () => {
 
   const uploadAndAttachFile = async (
     file: File,
-    setField: React.Dispatch<React.SetStateAction<string>>,
+    setField: (value: string | ((prev: string) => string)) => void,
     emoji: string
   ) => {
     if (!user?.id) {
