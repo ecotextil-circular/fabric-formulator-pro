@@ -397,32 +397,23 @@ const SustainableCollectionSection = () => {
                   <DownloadButtons content={referenciasVisuais} fieldName="Referências Visuais" />
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all cursor-pointer">
                     <FileText className="w-3 h-3" /> PDF
-                    <input type="file" accept="application/pdf" className="hidden" onChange={(e) => {
+                    <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setReferenciasVisuais(prev => prev ? `${prev}\n📄 ${file.name}` : `📄 ${file.name}`);
-                        toast.success(`PDF "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
-                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => {
+                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setReferenciasVisuais(prev => prev ? `${prev}\n📎 ${file.name}` : `📎 ${file.name}`);
-                        toast.success(`Imagem "${file.name}" adicionada!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
-                    <input type="file" accept="video/mp4" className="hidden" onChange={(e) => {
+                    <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setReferenciasVisuais(prev => prev ? `${prev}\n🎬 ${file.name}` : `🎬 ${file.name}`);
-                        toast.success(`Vídeo "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "🎬");
                     }} />
                   </label>
                 </div>
@@ -434,32 +425,23 @@ const SustainableCollectionSection = () => {
                   <DownloadButtons content={esbocosCroquis} fieldName="Esboços e Croquis" />
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all cursor-pointer">
                     <FileText className="w-3 h-3" /> PDF
-                    <input type="file" accept="application/pdf" className="hidden" onChange={(e) => {
+                    <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setEsbocosCroquis(prev => prev ? `${prev}\n📄 ${file.name}` : `📄 ${file.name}`);
-                        toast.success(`PDF "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
-                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => {
+                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setEsbocosCroquis(prev => prev ? `${prev}\n📎 ${file.name}` : `📎 ${file.name}`);
-                        toast.success(`Imagem "${file.name}" adicionada!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
-                    <input type="file" accept="video/mp4" className="hidden" onChange={(e) => {
+                    <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setEsbocosCroquis(prev => prev ? `${prev}\n🎬 ${file.name}` : `🎬 ${file.name}`);
-                        toast.success(`Vídeo "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "🎬");
                     }} />
                   </label>
                 </div>
