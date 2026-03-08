@@ -13,7 +13,7 @@ const PECAS_TIPOS = ["Calça","Saia Curta","Saia Midi","Saia Longa","Blusa de Ma
 const TAMANHOS = ["PP","P","M","G","G1","G2","G3","G4","34","36","38","40","42","44","46","48","50","52","54","56","XXS","XS","S","M","L","XL","XXL","XXXL"];
 const RESIDUOS_TIPOS = ["Retalhos de tecido","Fios e linhas","Sobras de malha","Aparas de couro","Resíduos de tingimento","Embalagens","Outros"];
 const PALETAS = [
-  { name: "Terra Natural", colors: ["#5C4033","#C4A35A","#A9B18E","#D4C5A9","#8B7355","#C2B280"], desc: "Tons terrosos e naturais" },
+  { name: "Terra Natural", colors: ["#5C4033","#8B7355","#C4A35A","#D4C5A9","#C2B280","#A0826D"], desc: "Tons terrosos e naturais" },
   { name: "Verde Sustentável", colors: ["#2D5016","#3A7D44","#69B578","#A7C957","#6B8E23","#8FBC8F"], desc: "Paleta verde inspirada na natureza" },
   { name: "Oceano Consciente", colors: ["#1B4965","#2C6E8C","#3D8DAF","#5ABED6","#4A7C91","#6EADC1"], desc: "Tons de azul inspirados no oceano" },
   { name: "Deserto Minimalista", colors: ["#8B6F47","#A0826D","#C4AE97","#D5C4B0","#B8A088","#9C8B72"], desc: "Paleta neutra e minimalista" },
@@ -23,22 +23,32 @@ const PALETAS = [
   { name: "Mostarda & Âmbar", colors: ["#D4A017","#C68E17","#B8860B","#DAA520","#E8A317","#F0C420"], desc: "Tons quentes de mostarda" },
 ];
 
-const COLOR_MAP: Record<string, string> = {
-  "#2D5016": "Verde Floresta", "#7CB342": "Verde Lima", "#5D8A5E": "Verde Musgo", "#9CCC65": "Verde Claro",
-  "#E57373": "Rosa Coral", "#D7CCC8": "Bege Rosado", "#8D6E63": "Marrom Café", "#1B5E50": "Verde Petróleo",
-  "#2980B9": "Azul Royal", "#5DADE2": "Azul Celeste", "#4A8C8C": "Teal", "#FAD6A5": "Pêssego",
-  "#F5F5DC": "Bege", "#BDBDBD": "Cinza Claro", "#E0E0E0": "Cinza Pérola", "#F9A825": "Amarelo Ouro",
-  "#E8A317": "Âmbar", "#F57C00": "Laranja", "#8D5524": "Marrom Terra", "#5B9BD5": "Azul Aço",
-  "#D4A5A5": "Rosa Antigo", "#C97B7B": "Rosa Queimado", "#7B6D8D": "Lavanda Escuro", "#9B8BB4": "Lavanda",
-  "#1B4965": "Azul Marinho", "#3A7D44": "Verde Esmeralda", "#C4A35A": "Dourado", "#5C4033": "Marrom Escuro",
-  "#A7C957": "Verde Abacate", "#D4C5A9": "Areia", "#808080": "Cinza Médio", "#2F4F4F": "Cinza Ardósia",
-  "#B8860B": "Mostarda Escura", "#DAA520": "Ouro Velho", "#F0C420": "Amarelo Sol", "#A35D5D": "Terracota Rosa",
-  "#FF6F61": "Coral Vivo", "#4B0082": "Índigo", "#800020": "Borgonha", "#006D5B": "Verde Jade",
-  "#FFD700": "Ouro", "#C0C0C0": "Prata", "#000000": "Preto", "#FFFFFF": "Branco",
-  "#F5E6CC": "Creme", "#D2691E": "Chocolate", "#8B0000": "Vermelho Escuro", "#556B2F": "Verde Oliva",
-};
-
-const INDIVIDUAL_COLORS = Object.keys(COLOR_MAP);
+const ALL_COLORS: { hex: string; name: string }[] = [
+  // Brancos e Cremes
+  { hex: "#FFFFFF", name: "Branco" }, { hex: "#FFFAF0", name: "Branco Floral" }, { hex: "#FFF8DC", name: "Creme Cornsilk" }, { hex: "#F5F5DC", name: "Bege" }, { hex: "#F5E6CC", name: "Creme" }, { hex: "#FAF0E6", name: "Linho" },
+  // Amarelos e Dourados
+  { hex: "#FFD700", name: "Ouro" }, { hex: "#F0C420", name: "Amarelo Sol" }, { hex: "#F9A825", name: "Amarelo Ouro" }, { hex: "#DAA520", name: "Ouro Velho" }, { hex: "#D4A017", name: "Mostarda" }, { hex: "#C68E17", name: "Mostarda Escura" }, { hex: "#B8860B", name: "Dourado Escuro" }, { hex: "#E8A317", name: "Âmbar" },
+  // Laranjas e Pêssego
+  { hex: "#FF8C00", name: "Laranja Escuro" }, { hex: "#F57C00", name: "Laranja" }, { hex: "#FF6F61", name: "Coral Vivo" }, { hex: "#FAD6A5", name: "Pêssego" }, { hex: "#FFAB91", name: "Salmão Claro" }, { hex: "#E57373", name: "Coral Rosa" },
+  // Vermelhos
+  { hex: "#DC143C", name: "Carmesim" }, { hex: "#8B0000", name: "Vermelho Escuro" }, { hex: "#800020", name: "Borgonha" }, { hex: "#A35D5D", name: "Terracota Rosa" }, { hex: "#C97B7B", name: "Rosa Queimado" },
+  // Rosas
+  { hex: "#D4A5A5", name: "Rosa Antigo" }, { hex: "#E8B4B8", name: "Rosa Claro" }, { hex: "#F0C2C2", name: "Rosa Pétala" }, { hex: "#B56E6E", name: "Rosa Seco" }, { hex: "#FFB6C1", name: "Rosa Bebê" }, { hex: "#DB7093", name: "Rosa Médio" },
+  // Roxos e Lavandas
+  { hex: "#4B0082", name: "Índigo" }, { hex: "#6A0DAD", name: "Roxo Escuro" }, { hex: "#7B6D8D", name: "Lavanda Escuro" }, { hex: "#9B8BB4", name: "Lavanda" }, { hex: "#C8B8DB", name: "Lavanda Claro" }, { hex: "#8E7FB0", name: "Lilás" }, { hex: "#B0A0C8", name: "Ametista" }, { hex: "#D8CCE8", name: "Lavanda Suave" },
+  // Azuis
+  { hex: "#000080", name: "Azul Marinho" }, { hex: "#1B4965", name: "Azul Noite" }, { hex: "#2980B9", name: "Azul Royal" }, { hex: "#5DADE2", name: "Azul Celeste" }, { hex: "#5B9BD5", name: "Azul Aço" }, { hex: "#2C6E8C", name: "Azul Petróleo" }, { hex: "#3D8DAF", name: "Azul Claro" }, { hex: "#5ABED6", name: "Azul Céu" }, { hex: "#87CEEB", name: "Azul Bebê" }, { hex: "#B0E0E6", name: "Azul Pó" },
+  // Teais e Turquesas
+  { hex: "#4A8C8C", name: "Teal" }, { hex: "#4A7C91", name: "Teal Escuro" }, { hex: "#6EADC1", name: "Turquesa" }, { hex: "#1B5E50", name: "Verde Petróleo" }, { hex: "#006D5B", name: "Verde Jade" },
+  // Verdes
+  { hex: "#2D5016", name: "Verde Floresta" }, { hex: "#3A7D44", name: "Verde Esmeralda" }, { hex: "#556B2F", name: "Verde Oliva" }, { hex: "#6B8E23", name: "Verde Lima Escuro" }, { hex: "#69B578", name: "Verde Menta" }, { hex: "#A7C957", name: "Verde Abacate" }, { hex: "#8FBC8F", name: "Verde Salvia" }, { hex: "#9CCC65", name: "Verde Claro" }, { hex: "#5D8A5E", name: "Verde Musgo" }, { hex: "#228B22", name: "Verde Floresta Vivo" },
+  // Marrons
+  { hex: "#5C4033", name: "Marrom Escuro" }, { hex: "#8B7355", name: "Marrom Café" }, { hex: "#8D5524", name: "Marrom Terra" }, { hex: "#D2691E", name: "Chocolate" }, { hex: "#8D6E63", name: "Marrom Rosado" }, { hex: "#A0826D", name: "Marrom Claro" }, { hex: "#C4A35A", name: "Dourado Suave" }, { hex: "#C4AE97", name: "Camelo" }, { hex: "#D4C5A9", name: "Areia" }, { hex: "#D5C4B0", name: "Bege Rosado" }, { hex: "#B8A088", name: "Areia Escura" }, { hex: "#9C8B72", name: "Taupe" }, { hex: "#C2B280", name: "Caqui" },
+  // Cinzas
+  { hex: "#2F4F4F", name: "Cinza Ardósia" }, { hex: "#6B6B6B", name: "Cinza Escuro" }, { hex: "#808080", name: "Cinza Médio" }, { hex: "#A9A9A9", name: "Cinza" }, { hex: "#C0C0C0", name: "Prata" }, { hex: "#D3D3D3", name: "Cinza Claro" }, { hex: "#E0E0E0", name: "Cinza Pérola" }, { hex: "#BDBDBD", name: "Cinza Neutro" },
+  // Preto
+  { hex: "#000000", name: "Preto" }, { hex: "#1C1C1C", name: "Preto Suave" }, { hex: "#333333", name: "Carvão" },
+];
 
 const SustainableCollectionSection = () => {
   const { user } = useAuth();
@@ -90,8 +100,9 @@ const SustainableCollectionSection = () => {
 
   const togglePeca = (p: string) => setPecasSelecionadas(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   const toggleTamanho = (t: string) => setTamanhosSelecionados(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
+  const getColorName = (hex: string) => ALL_COLORS.find(c => c.hex === hex)?.name || hex;
   const toggleColor = (hex: string) => {
-    const colorName = COLOR_MAP[hex] || hex;
+    const colorName = getColorName(hex);
     const label = `${colorName} (${hex})`;
     setSelectedColors(prev => prev.includes(hex) ? prev.filter(x => x !== hex) : [...prev, hex]);
     setPaletaCores(prev => {
@@ -254,7 +265,7 @@ const SustainableCollectionSection = () => {
                   {PALETAS.map(p => (
                     <Card key={p.name} className="p-3 rounded-xl border border-border cursor-pointer hover:shadow-md" onClick={() => {
                       setSelectedColors(p.colors);
-                      setPaletaCores(p.colors.map(c => `${COLOR_MAP[c] || c} (${c})`).join(', '));
+                      setPaletaCores(p.colors.map(c => `${getColorName(c)} (${c})`).join(', '));
                     }}>
                       <p className="font-semibold text-foreground text-sm mb-1 flex items-center gap-1"><Leaf className="w-3 h-3" /> {p.name}</p>
                       <div className="flex gap-1 mb-1">{p.colors.map((c, i) => <div key={i} className="w-8 h-6 rounded" style={{ backgroundColor: c }} />)}</div>
@@ -265,23 +276,26 @@ const SustainableCollectionSection = () => {
               </div>
               <div>
                 <Label className="text-base mb-1 block">Selecione Cores Individuais</Label>
-                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para selecioná-las. O nome e código da cor aparecerão automaticamente no campo acima.</p>
-                <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
-                  {INDIVIDUAL_COLORS.map((c, i) => (
-                    <button key={i} onClick={() => toggleColor(c)} className={`w-full aspect-square rounded-lg border-2 transition-all relative group ${selectedColors.includes(c) ? "border-foreground scale-110 shadow-lg" : "border-transparent hover:border-border"}`} style={{ backgroundColor: c }} title={`${COLOR_MAP[c]} (${c})`}>
-                      {selectedColors.includes(c) && <div className="absolute inset-0 flex items-center justify-center"><span className="text-white text-xs font-bold drop-shadow-lg">✓</span></div>}
+                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para adicioná-las. A cor e o código hex aparecerão no campo acima e na lista abaixo.</p>
+                <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1.5">
+                  {ALL_COLORS.map((c, i) => (
+                    <button key={i} onClick={() => toggleColor(c.hex)} className={`w-full aspect-square rounded border-2 transition-all relative ${selectedColors.includes(c.hex) ? "border-foreground scale-110 shadow-lg z-10" : "border-transparent hover:border-border hover:scale-105"}`} style={{ backgroundColor: c.hex }} title={`${c.name} (${c.hex})`}>
+                      {selectedColors.includes(c.hex) && <div className="absolute inset-0 flex items-center justify-center"><span className="text-xs font-bold drop-shadow-lg" style={{ color: ['#FFFFFF','#FFFAF0','#FFF8DC','#F5F5DC','#F5E6CC','#FAF0E6','#FFD700','#F0C420','#F9A825','#FAD6A5','#FFAB91','#F0C2C2','#E8B4B8','#FFB6C1','#C8B8DB','#D8CCE8','#87CEEB','#B0E0E6','#D3D3D3','#E0E0E0','#C0C0C0','#D5C4B0','#C4AE97','#A9A9A9','#BDBDBD','#9CCC65','#A7C957'].includes(c.hex) ? '#333' : '#fff' }}>✓</span></div>}
                     </button>
                   ))}
                 </div>
                 {selectedColors.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {selectedColors.map(c => (
-                      <span key={c} className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-foreground">
-                        <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: c }} />
-                        {COLOR_MAP[c] || c} ({c})
-                        <button onClick={() => toggleColor(c)} className="ml-1 text-muted-foreground hover:text-destructive">×</button>
-                      </span>
-                    ))}
+                  <div className="mt-4 p-3 rounded-xl bg-muted/50 border border-border">
+                    <p className="text-sm font-semibold text-foreground mb-2">Cores selecionadas:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedColors.map(hex => (
+                        <div key={hex} className="inline-flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-background border border-border shadow-sm">
+                          <span className="w-5 h-5 rounded border border-border/50 shrink-0" style={{ backgroundColor: hex }} />
+                          <span className="text-xs font-medium text-foreground">{hex}</span>
+                          <button onClick={() => toggleColor(hex)} className="ml-0.5 text-muted-foreground hover:text-destructive text-xs font-bold">×</button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
