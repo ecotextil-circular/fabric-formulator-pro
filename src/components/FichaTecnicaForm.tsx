@@ -184,6 +184,9 @@ const FichaTecnicaForm = () => {
           nomeProduto, tipoPeca: tipoFinal, colecao, designer,
           dataCriacao, observacoes, tecidos, aviamentos, acessorios,
           maquinario, sequenciaOperacional,
+          desenho_url: desenhoStorageUrl || null,
+          desenho_nome: desenhoFile?.name || null,
+          desenho_tipo: desenhoType || null,
         },
       });
       if (result) {
