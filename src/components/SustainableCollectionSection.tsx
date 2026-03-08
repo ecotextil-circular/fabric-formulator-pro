@@ -477,6 +477,7 @@ const SustainableCollectionSection = () => {
                     }} />
                   </label>
                 </div>
+                <FileList content={referenciasVisuais} setField={setReferenciasVisuais} />
               </div>
               <div>
                 <Label className="text-base">Esboços/Croquis</Label>
@@ -505,6 +506,7 @@ const SustainableCollectionSection = () => {
                     }} />
                   </label>
                 </div>
+                <FileList content={esbocosCroquis} setField={setEsbocosCroquis} />
               </div>
             </div>
           )}
