@@ -281,28 +281,35 @@ const FichaTecnicaForm = () => {
           <div style={sectionStyle}>
             <div style={sectionTitle}>🎨 Desenho Técnico</div>
             <label style={{ ...addBtnStyle, display: 'inline-flex', cursor: 'pointer' }}>
-              <Upload size={16} /> Enviar Imagem ou PDF
-              <input type="file" accept="image/*,.pdf" onChange={handleFileUpload} style={{ display: 'none' }} />
+              <Upload size={16} /> Enviar Imagem, PDF ou MP4
+              <input type="file" accept="image/*,.pdf,video/mp4" onChange={handleFileUpload} style={{ display: 'none' }} />
             </label>
             {desenhoPreview && (
               <div style={{ marginTop: '14px' }}>
                 {desenhoType.startsWith("image/") ? (
                   <img src={desenhoPreview} alt="Desenho" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', border: '1px solid hsl(40,22%,85%)' }} />
-                ) : (
+                ) : desenhoType === "application/pdf" ? (
                   <iframe src={desenhoPreview} style={{ width: '100%', height: '300px', borderRadius: '8px', border: '1px solid hsl(40,22%,85%)' }} title="PDF Preview" />
-                )}
+                ) : null}
                 <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
                   <button type="button" onClick={handleDownloadDesenho} className="bg-primary text-primary-foreground" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 18px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
                     <Download size={16} /> Baixar Desenho
                   </button>
-                  <button type="button" onClick={() => { setDesenhoFile(null); setDesenhoPreview(null); setDesenhoType(""); }} style={{ ...removeBtnStyle, padding: '10px 14px', fontSize: '14px', gap: '6px', display: 'flex', alignItems: 'center' }}>
+                  <button type="button" onClick={() => { setDesenhoFile(null); setDesenhoPreview(null); setDesenhoType(""); setDesenhoStorageUrl(""); }} style={{ ...removeBtnStyle, padding: '10px 14px', fontSize: '14px', gap: '6px', display: 'flex', alignItems: 'center' }}>
                     <Trash2 size={14} /> Remover
                   </button>
                 </div>
               </div>
             )}
-            {!desenhoPreview && (
-              <p style={{ fontSize: '13px', marginTop: '8px' }} className="text-muted-foreground">Aceita imagens (PNG, JPEG) e PDF. Máximo 5MB.</p>
+            {!desenhoPreview && desenhoStorageUrl && (
+              <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
+                <button type="button" onClick={handleDownloadDesenho} className="bg-primary text-primary-foreground" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 18px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
+                  <Download size={16} /> Baixar Arquivo Enviado
+                </button>
+              </div>
+            )}
+            {!desenhoPreview && !desenhoStorageUrl && (
+              <p style={{ fontSize: '13px', marginTop: '8px' }} className="text-muted-foreground">Aceita imagens (PNG, JPEG), PDF e MP4. Máximo 20MB.</p>
             )}
           </div>
 
