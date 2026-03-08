@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { BookOpen, ChevronDown, ChevronUp, Leaf, Search, Factory, Clipboard, Users, Cog, BarChart3, Truck, Cpu, RefreshCw, Palette, Megaphone, Sparkles, ShieldCheck, Rocket, Calculator, TrendingUp, Target, Kanban, Shirt, Activity } from "lucide-react";
+import SectionBanner, { SECTION_BANNERS } from "@/components/SectionBanner";
 
 const GUIDE_SECTIONS = [
   {
