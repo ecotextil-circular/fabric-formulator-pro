@@ -625,6 +625,27 @@ const SustainableCollectionSection = () => {
                   </div>
                 </div>
               )}
+              {/* Show uploaded files from design fields */}
+              {(extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').length > 0 || extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').length > 0) && (
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Arquivos Enviados</p>
+                  {extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').map((f: any, i: number) => (
+                    <a key={`ref-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
+                      {getFileIcon(f.emoji)}
+                      <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
+                      <span className="text-xs text-muted-foreground">Referência</span>
+                      <Eye className="w-3.5 h-3.5 text-primary" />
+                    </a>
+                  ))}
+                  {extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').map((f: any, i: number) => (
+                    <a key={`esb-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
+                      {getFileIcon(f.emoji)}
+                      <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
+                      <span className="text-xs text-muted-foreground">Esboço</span>
+                      <Eye className="w-3.5 h-3.5 text-primary" />
+                    </a>
+                  ))}
+                </div>
               {viewingItem.dados?.impacto && (
                 <div><p className="font-semibold text-foreground mb-1">Impacto Ambiental</p>
                   <p className="text-sm text-muted-foreground">Índice: {viewingItem.dados.impacto.impactoTotal?.toFixed(1)} pts</p>
