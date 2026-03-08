@@ -9,7 +9,10 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: string
   const [loading, setLoading] = useState(false);
 
   const fetchItems = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      setItems([]);
+      return;
+    }
     setLoading(true);
     try {
       const { data, error } = await (supabase as any)
@@ -21,6 +24,7 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: string
       setItems((data as unknown as T[]) || []);
     } catch (err: any) {
       console.error(`Erro ao carregar ${table}:`, err);
+      toast.error(`Erro ao carregar dados: ${err?.message || "tente novamente"}`);
     } finally {
       setLoading(false);
     }
@@ -40,13 +44,20 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: string
         .from(table)
         .insert({ ...item, user_id: user.id })
         .select()
-        .single();
+        .maybeSingle();
+
       if (error) throw error;
-      setItems((prev) => [data as unknown as T, ...prev]);
-      return data as unknown as T;
+
+      if (data) {
+        setItems((prev) => [data as unknown as T, ...prev]);
+      } else {
+        await fetchItems();
+      }
+
+      return (data as unknown as T) ?? null;
     } catch (err: any) {
       console.error(`Erro ao inserir em ${table}:`, err);
-      toast.error("Erro ao salvar no banco de dados.");
+      toast.error(`Erro ao salvar no banco: ${err?.message || "tente novamente"}`);
       return null;
     }
   };
@@ -56,17 +67,21 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: string
     try {
       const { data, error } = await (supabase as any)
         .from(table)
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update({ ...updates })
         .eq("id", id)
         .eq("user_id", user.id)
         .select()
-        .single();
+        .maybeSingle();
       if (error) throw error;
-      setItems((prev) => prev.map((i: any) => (i.id === id ? (data as unknown as T) : i)));
-      return data as unknown as T;
+      if (data) {
+        setItems((prev) => prev.map((i: any) => (i.id === id ? (data as unknown as T) : i)));
+      } else {
+        await fetchItems();
+      }
+      return (data as unknown as T) ?? null;
     } catch (err: any) {
       console.error(`Erro ao atualizar ${table}:`, err);
-      toast.error("Erro ao atualizar.");
+      toast.error(`Erro ao atualizar: ${err?.message || "tente novamente"}`);
       return null;
     }
   };
@@ -84,7 +99,7 @@ export function useSupabaseCrud<T extends Record<string, unknown>>(table: string
       return true;
     } catch (err: any) {
       console.error(`Erro ao deletar de ${table}:`, err);
-      toast.error("Erro ao deletar.");
+      toast.error(`Erro ao deletar: ${err?.message || "tente novamente"}`);
       return false;
     }
   };

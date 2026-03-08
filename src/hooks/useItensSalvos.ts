@@ -9,7 +9,10 @@ export function useItensSalvos(tipo: string) {
   const [loading, setLoading] = useState(false);
 
   const fetchItems = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      setItems([]);
+      return;
+    }
     setLoading(true);
     try {
       const { data, error } = await (supabase as any)
@@ -22,6 +25,7 @@ export function useItensSalvos(tipo: string) {
       setItems(data || []);
     } catch (err: any) {
       console.error(`Erro ao carregar ${tipo}:`, err);
+      toast.error(`Erro ao carregar ${tipo}: ${err?.message || "tente novamente"}`);
     } finally {
       setLoading(false);
     }
@@ -41,13 +45,19 @@ export function useItensSalvos(tipo: string) {
         .from("itens_salvos")
         .insert({ user_id: user.id, tipo, titulo, dados })
         .select()
-        .single();
+        .maybeSingle();
       if (error) throw error;
-      setItems((prev) => [data, ...prev]);
-      return data;
+
+      if (data) {
+        setItems((prev) => [data, ...prev]);
+      } else {
+        await fetchItems();
+      }
+
+      return data ?? null;
     } catch (err: any) {
       console.error(`Erro ao salvar ${tipo}:`, err);
-      toast.error("Erro ao salvar.");
+      toast.error(`Erro ao salvar ${tipo}: ${err?.message || "tente novamente"}`);
       return null;
     }
   };
@@ -65,7 +75,7 @@ export function useItensSalvos(tipo: string) {
       return true;
     } catch (err: any) {
       console.error(`Erro ao deletar ${tipo}:`, err);
-      toast.error("Erro ao deletar.");
+      toast.error(`Erro ao deletar ${tipo}: ${err?.message || "tente novamente"}`);
       return false;
     }
   };

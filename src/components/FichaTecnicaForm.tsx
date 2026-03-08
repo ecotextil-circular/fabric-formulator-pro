@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { Plus, Trash2, Download, Upload, FileText, Loader2, Eye, X, Eraser } from "lucide-react";
 import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const TIPOS_PECA = [
   "Blusa", "Camiseta", "Camisa", "Top", "Vestido", "Saia", "Calça",
@@ -76,6 +77,7 @@ const FichaTecnicaForm = () => {
   const [desenhoFile, setDesenhoFile] = useState<File | null>(null);
   const [desenhoPreview, setDesenhoPreview] = useState<string | null>(null);
   const [desenhoType, setDesenhoType] = useState<string>("");
+  const [desenhoStorageUrl, setDesenhoStorageUrl] = useState<string>("");
   const [tecidos, setTecidos] = useState<Tecido[]>([]);
   const [aviamentos, setAviamentos] = useState<Aviamento[]>([]);
   const [acessorios, setAcessorios] = useState<string[]>([]);
@@ -96,27 +98,47 @@ const FichaTecnicaForm = () => {
   const [selAcessorio, setSelAcessorio] = useState("");
   const [outroAcessorio, setOutroAcessorio] = useState("");
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { toast.error('Arquivo muito grande (máximo 5MB)'); return; }
-    setDesenhoFile(file);
-    setDesenhoType(file.type);
-    if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = (ev) => setDesenhoPreview(ev.target?.result as string);
-      reader.readAsDataURL(file);
-    } else if (file.type === "application/pdf") {
-      setDesenhoPreview(URL.createObjectURL(file));
+    if (!file || !user?.id) return;
+    if (file.size > 20 * 1024 * 1024) { toast.error('Arquivo muito grande (máximo 20MB)'); return; }
+
+    try {
+      const safeName = file.name.replace(/\s+/g, "-").toLowerCase();
+      const path = `${user.id}/fichas/${Date.now()}-${safeName}`;
+      const { error: uploadError } = await supabase.storage.from("uploads").upload(path, file, { upsert: false });
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("uploads").getPublicUrl(path);
+      setDesenhoStorageUrl(data.publicUrl);
+      setDesenhoFile(file);
+      setDesenhoType(file.type);
+
+      if (file.type.startsWith("image/") || file.type === "application/pdf") {
+        setDesenhoPreview(URL.createObjectURL(file));
+      } else {
+        setDesenhoPreview(null);
+      }
+
+      toast.success(`Arquivo "${file.name}" enviado com sucesso!`);
+    } catch (error: any) {
+      console.error("Erro no upload do desenho:", error);
+      toast.error(`Erro ao enviar arquivo: ${error?.message || "tente novamente"}`);
     }
   };
 
   const handleDownloadDesenho = () => {
-    if (!desenhoFile) { toast.error('Nenhum desenho para baixar'); return; }
-    const url = URL.createObjectURL(desenhoFile);
+    const downloadUrl = desenhoStorageUrl || (desenhoFile ? URL.createObjectURL(desenhoFile) : "");
+    if (!downloadUrl) { toast.error('Nenhum desenho para baixar'); return; }
+
     const a = document.createElement("a");
-    a.href = url; a.download = desenhoFile.name; a.click();
-    URL.revokeObjectURL(url);
+    a.href = downloadUrl;
+    a.download = desenhoFile?.name || `desenho-tecnico-${Date.now()}`;
+    a.click();
+
+    if (!desenhoStorageUrl) {
+      URL.revokeObjectURL(downloadUrl);
+    }
   };
 
   const handleDownloadFicha = () => {
@@ -162,6 +184,9 @@ const FichaTecnicaForm = () => {
           nomeProduto, tipoPeca: tipoFinal, colecao, designer,
           dataCriacao, observacoes, tecidos, aviamentos, acessorios,
           maquinario, sequenciaOperacional,
+          desenho_url: desenhoStorageUrl || null,
+          desenho_nome: desenhoFile?.name || null,
+          desenho_tipo: desenhoType || null,
         },
       });
       if (result) {
@@ -180,7 +205,7 @@ const FichaTecnicaForm = () => {
     setNomeProduto(""); setReferencia(""); setTipoPeca(""); setOutroTipo("");
     setColecao(""); setDesigner(""); setDataCriacao(""); setObservacoes("");
     setTecidos([]); setAviamentos([]); setAcessorios([]); setMaquinario([]);
-    setSequenciaOperacional([]); setDesenhoFile(null); setDesenhoPreview(null);
+    setSequenciaOperacional([]); setDesenhoFile(null); setDesenhoPreview(null); setDesenhoType(""); setDesenhoStorageUrl("");
     setSelMaquina(""); setOutroMaquina(""); setSelSequencia(""); setOutroSequencia("");
     setSelTecido(""); setOutroTecido(""); setSelAviamento(""); setOutroAviamento("");
     setSelAcessorio(""); setOutroAcessorio("");
@@ -256,28 +281,35 @@ const FichaTecnicaForm = () => {
           <div style={sectionStyle}>
             <div style={sectionTitle}>🎨 Desenho Técnico</div>
             <label style={{ ...addBtnStyle, display: 'inline-flex', cursor: 'pointer' }}>
-              <Upload size={16} /> Enviar Imagem ou PDF
-              <input type="file" accept="image/*,.pdf" onChange={handleFileUpload} style={{ display: 'none' }} />
+              <Upload size={16} /> Enviar Imagem, PDF ou MP4
+              <input type="file" accept="image/*,.pdf,video/mp4" onChange={handleFileUpload} style={{ display: 'none' }} />
             </label>
             {desenhoPreview && (
               <div style={{ marginTop: '14px' }}>
                 {desenhoType.startsWith("image/") ? (
                   <img src={desenhoPreview} alt="Desenho" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', border: '1px solid hsl(40,22%,85%)' }} />
-                ) : (
+                ) : desenhoType === "application/pdf" ? (
                   <iframe src={desenhoPreview} style={{ width: '100%', height: '300px', borderRadius: '8px', border: '1px solid hsl(40,22%,85%)' }} title="PDF Preview" />
-                )}
+                ) : null}
                 <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
                   <button type="button" onClick={handleDownloadDesenho} className="bg-primary text-primary-foreground" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 18px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
                     <Download size={16} /> Baixar Desenho
                   </button>
-                  <button type="button" onClick={() => { setDesenhoFile(null); setDesenhoPreview(null); setDesenhoType(""); }} style={{ ...removeBtnStyle, padding: '10px 14px', fontSize: '14px', gap: '6px', display: 'flex', alignItems: 'center' }}>
+                  <button type="button" onClick={() => { setDesenhoFile(null); setDesenhoPreview(null); setDesenhoType(""); setDesenhoStorageUrl(""); }} style={{ ...removeBtnStyle, padding: '10px 14px', fontSize: '14px', gap: '6px', display: 'flex', alignItems: 'center' }}>
                     <Trash2 size={14} /> Remover
                   </button>
                 </div>
               </div>
             )}
-            {!desenhoPreview && (
-              <p style={{ fontSize: '13px', marginTop: '8px' }} className="text-muted-foreground">Aceita imagens (PNG, JPEG) e PDF. Máximo 5MB.</p>
+            {!desenhoPreview && desenhoStorageUrl && (
+              <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
+                <button type="button" onClick={handleDownloadDesenho} className="bg-primary text-primary-foreground" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 18px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
+                  <Download size={16} /> Baixar Arquivo Enviado
+                </button>
+              </div>
+            )}
+            {!desenhoPreview && !desenhoStorageUrl && (
+              <p style={{ fontSize: '13px', marginTop: '8px' }} className="text-muted-foreground">Aceita imagens (PNG, JPEG), PDF e MP4. Máximo 20MB.</p>
             )}
           </div>
 
@@ -539,6 +571,23 @@ const FichaTecnicaForm = () => {
               <div>
                 <p className="text-foreground" style={{ fontSize: '15px', fontWeight: '700', marginBottom: '8px' }}>📝 Observações</p>
                 <p className="text-muted-foreground" style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>{viewingFicha.dados.observacoes}</p>
+              </div>
+            )}
+            {viewingFicha.dados?.desenho_url && (
+              <div style={{ marginTop: '14px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const a = document.createElement("a");
+                    a.href = viewingFicha.dados.desenho_url;
+                    a.download = viewingFicha.dados.desenho_nome || "desenho-tecnico";
+                    a.click();
+                  }}
+                  className="bg-primary text-primary-foreground"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+                >
+                  <Download size={16} /> Baixar Arquivo da Ficha
+                </button>
               </div>
             )}
           </div>

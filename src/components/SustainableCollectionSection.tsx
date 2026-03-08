@@ -8,6 +8,7 @@ import { Sparkles, Save, Eraser, Eye, X, List, Trash2, Leaf, Calculator, Downloa
 import { toast } from "sonner";
 import { useItensSalvos } from "@/hooks/useItensSalvos";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const PECAS_TIPOS = ["Calça","Saia Curta","Saia Midi","Saia Longa","Blusa de Manga Longa","Blusa de Manga Curta","Bermuda","Jaqueta","Casaco","T-shirt","Cropped","Calcinha","Sutiã","Vestido","Macacão","Conjunto","Regata","Body"];
 const TAMANHOS = ["PP","P","M","G","G1","G2","G3","G4","34","36","38","40","42","44","46","48","50","52","54","56","XXS","XS","S","M","L","XL","XXL","XXXL"];
@@ -158,6 +159,36 @@ const SustainableCollectionSection = () => {
       </button>
     </div>
   );
+
+  const uploadAndAttachFile = async (
+    file: File,
+    setField: (value: string | ((prev: string) => string)) => void,
+    emoji: string
+  ) => {
+    if (!user?.id) {
+      toast.error("Faça login para enviar arquivos.");
+      return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("Arquivo muito grande (máximo 20MB).");
+      return;
+    }
+
+    try {
+      const safeName = file.name.replace(/\s+/g, "-").toLowerCase();
+      const path = `${user.id}/colecao/${Date.now()}-${safeName}`;
+      const { error: uploadError } = await supabase.storage.from("uploads").upload(path, file, { upsert: false });
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("uploads").getPublicUrl(path);
+      setField(prev => (prev ? `${prev}\n${emoji} ${file.name} — ${data.publicUrl}` : `${emoji} ${file.name} — ${data.publicUrl}`));
+      toast.success(`Arquivo "${file.name}" enviado!`);
+    } catch (error: any) {
+      console.error("Erro no upload de arquivo:", error);
+      toast.error(`Erro ao enviar arquivo: ${error?.message || "tente novamente"}`);
+    }
+  };
 
   const handleSave = async () => {
     if (!nomeColecao.trim()) { toast.error("Nome da coleção é obrigatório."); return; }
@@ -366,32 +397,23 @@ const SustainableCollectionSection = () => {
                   <DownloadButtons content={referenciasVisuais} fieldName="Referências Visuais" />
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all cursor-pointer">
                     <FileText className="w-3 h-3" /> PDF
-                    <input type="file" accept="application/pdf" className="hidden" onChange={(e) => {
+                    <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setReferenciasVisuais(prev => prev ? `${prev}\n📄 ${file.name}` : `📄 ${file.name}`);
-                        toast.success(`PDF "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
-                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => {
+                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setReferenciasVisuais(prev => prev ? `${prev}\n📎 ${file.name}` : `📎 ${file.name}`);
-                        toast.success(`Imagem "${file.name}" adicionada!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
-                    <input type="file" accept="video/mp4" className="hidden" onChange={(e) => {
+                    <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setReferenciasVisuais(prev => prev ? `${prev}\n🎬 ${file.name}` : `🎬 ${file.name}`);
-                        toast.success(`Vídeo "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setReferenciasVisuais, "🎬");
                     }} />
                   </label>
                 </div>
@@ -403,32 +425,23 @@ const SustainableCollectionSection = () => {
                   <DownloadButtons content={esbocosCroquis} fieldName="Esboços e Croquis" />
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all cursor-pointer">
                     <FileText className="w-3 h-3" /> PDF
-                    <input type="file" accept="application/pdf" className="hidden" onChange={(e) => {
+                    <input type="file" accept="application/pdf" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setEsbocosCroquis(prev => prev ? `${prev}\n📄 ${file.name}` : `📄 ${file.name}`);
-                        toast.success(`PDF "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📄");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Image className="w-3 h-3" /> PNG/JPEG
-                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => {
+                    <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setEsbocosCroquis(prev => prev ? `${prev}\n📎 ${file.name}` : `📎 ${file.name}`);
-                        toast.success(`Imagem "${file.name}" adicionada!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "📎");
                     }} />
                   </label>
                   <label className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all cursor-pointer">
                     <Video className="w-3 h-3" /> MP4
-                    <input type="file" accept="video/mp4" className="hidden" onChange={(e) => {
+                    <input type="file" accept="video/mp4" className="hidden" onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        setEsbocosCroquis(prev => prev ? `${prev}\n🎬 ${file.name}` : `🎬 ${file.name}`);
-                        toast.success(`Vídeo "${file.name}" adicionado!`);
-                      }
+                      if (file) await uploadAndAttachFile(file, setEsbocosCroquis, "🎬");
                     }} />
                   </label>
                 </div>
