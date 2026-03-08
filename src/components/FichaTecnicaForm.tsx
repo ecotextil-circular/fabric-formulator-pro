@@ -573,6 +573,23 @@ const FichaTecnicaForm = () => {
                 <p className="text-muted-foreground" style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>{viewingFicha.dados.observacoes}</p>
               </div>
             )}
+            {viewingFicha.dados?.desenho_url && (
+              <div style={{ marginTop: '14px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const a = document.createElement("a");
+                    a.href = viewingFicha.dados.desenho_url;
+                    a.download = viewingFicha.dados.desenho_nome || "desenho-tecnico";
+                    a.click();
+                  }}
+                  className="bg-primary text-primary-foreground"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+                >
+                  <Download size={16} /> Baixar Arquivo da Ficha
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
