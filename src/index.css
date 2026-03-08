@@ -6,51 +6,51 @@
 
 @layer base {
   :root {
-    --background: 36 33% 97%;
-    --foreground: 160 25% 14%;
+    --background: 40 40% 98%;
+    --foreground: 155 20% 18%;
 
-    --card: 36 30% 95%;
-    --card-foreground: 160 25% 14%;
+    --card: 40 35% 97%;
+    --card-foreground: 155 20% 18%;
 
-    --popover: 36 33% 97%;
-    --popover-foreground: 160 25% 14%;
+    --popover: 40 40% 98%;
+    --popover-foreground: 155 20% 18%;
 
     --primary: 160 55% 28%;
-    --primary-foreground: 36 33% 97%;
+    --primary-foreground: 40 40% 98%;
 
-    --secondary: 42 40% 86%;
-    --secondary-foreground: 160 30% 12%;
+    --secondary: 45 30% 92%;
+    --secondary-foreground: 155 25% 15%;
 
-    --muted: 40 22% 91%;
-    --muted-foreground: 160 12% 40%;
+    --muted: 42 25% 94%;
+    --muted-foreground: 155 10% 45%;
 
     --accent: 48 55% 68%;
-    --accent-foreground: 160 30% 12%;
+    --accent-foreground: 155 25% 15%;
 
     --destructive: 0 65% 52%;
-    --destructive-foreground: 36 33% 97%;
+    --destructive-foreground: 40 40% 98%;
 
-    --border: 40 22% 85%;
-    --input: 40 22% 85%;
+    --border: 42 20% 90%;
+    --input: 42 20% 90%;
     --ring: 160 55% 28%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 36 30% 95%;
-    --sidebar-foreground: 160 30% 12%;
+    --sidebar-background: 40 35% 97%;
+    --sidebar-foreground: 155 25% 15%;
     --sidebar-primary: 160 55% 28%;
-    --sidebar-primary-foreground: 36 33% 97%;
-    --sidebar-accent: 42 40% 86%;
-    --sidebar-accent-foreground: 160 30% 12%;
-    --sidebar-border: 40 22% 85%;
+    --sidebar-primary-foreground: 40 40% 98%;
+    --sidebar-accent: 45 30% 92%;
+    --sidebar-accent-foreground: 155 25% 15%;
+    --sidebar-border: 42 20% 90%;
     --sidebar-ring: 160 55% 28%;
 
     /* Custom tokens */
     --olive: 85 45% 38%;
-    --olive-foreground: 36 33% 97%;
+    --olive-foreground: 40 40% 98%;
     --teal: 160 55% 28%;
     --teal-light: 162 45% 48%;
-    --warm: 30 45% 80%;
+    --warm: 35 40% 88%;
     --warm-dark: 25 35% 38%;
     --rose-soft: 350 35% 68%;
 
