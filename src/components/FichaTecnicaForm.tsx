@@ -298,8 +298,7 @@ const FichaTecnicaForm = () => {
       setSequenciaOperacional([]);
       setDesenhoFile(null);
       setDesenhoPreview(null);
-
-      toast.success(`Ficha de "${nomeProduto}" salva com sucesso!`);
+toast.success(`Ficha de "${nomeProduto}" salva com sucesso!`);
     }
   } catch (error) {
     console.error('Erro ao salvar:', error);
