@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Save, Eraser, Eye, X, List, Trash2, Leaf, Calculator, Upload } from "lucide-react";
+import { Sparkles, Save, Eraser, Eye, X, List, Trash2, Leaf, Calculator } from "lucide-react";
 import { toast } from "sonner";
 import { useItensSalvos } from "@/hooks/useItensSalvos";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,8 +19,26 @@ const PALETAS = [
   { name: "Deserto Minimalista", colors: ["#8B6F47","#A0826D","#C4AE97","#D5C4B0","#B8A088","#9C8B72"], desc: "Paleta neutra e minimalista" },
   { name: "Cinza Reciclado", colors: ["#6B6B6B","#808080","#A9A9A9","#2F4F4F","#C0C0C0","#D3D3D3"], desc: "Cinzas para peças atemporais" },
   { name: "Lavanda Eco", colors: ["#7B6D8D","#9B8BB4","#C8B8DB","#8E7FB0","#B0A0C8","#D8CCE8"], desc: "Tons suaves de lavanda" },
+  { name: "Rosa Orgânico", colors: ["#D4A5A5","#E8B4B8","#F0C2C2","#C97B7B","#B56E6E","#A35D5D"], desc: "Rosa natural e orgânico" },
+  { name: "Mostarda & Âmbar", colors: ["#D4A017","#C68E17","#B8860B","#DAA520","#E8A317","#F0C420"], desc: "Tons quentes de mostarda" },
 ];
-const INDIVIDUAL_COLORS = ["#2D5016","#7CB342","#5D8A5E","#9CCC65","#E57373","#D7CCC8","#8D6E63","#1B5E50","#2980B9","#5DADE2","#4A8C8C","#FAD6A5","#F5F5DC","#BDBDBD","#E0E0E0","#F9A825","#E8A317","#F57C00","#8D5524","#5B9BD5"];
+
+const COLOR_MAP: Record<string, string> = {
+  "#2D5016": "Verde Floresta", "#7CB342": "Verde Lima", "#5D8A5E": "Verde Musgo", "#9CCC65": "Verde Claro",
+  "#E57373": "Rosa Coral", "#D7CCC8": "Bege Rosado", "#8D6E63": "Marrom Café", "#1B5E50": "Verde Petróleo",
+  "#2980B9": "Azul Royal", "#5DADE2": "Azul Celeste", "#4A8C8C": "Teal", "#FAD6A5": "Pêssego",
+  "#F5F5DC": "Bege", "#BDBDBD": "Cinza Claro", "#E0E0E0": "Cinza Pérola", "#F9A825": "Amarelo Ouro",
+  "#E8A317": "Âmbar", "#F57C00": "Laranja", "#8D5524": "Marrom Terra", "#5B9BD5": "Azul Aço",
+  "#D4A5A5": "Rosa Antigo", "#C97B7B": "Rosa Queimado", "#7B6D8D": "Lavanda Escuro", "#9B8BB4": "Lavanda",
+  "#1B4965": "Azul Marinho", "#3A7D44": "Verde Esmeralda", "#C4A35A": "Dourado", "#5C4033": "Marrom Escuro",
+  "#A7C957": "Verde Abacate", "#D4C5A9": "Areia", "#808080": "Cinza Médio", "#2F4F4F": "Cinza Ardósia",
+  "#B8860B": "Mostarda Escura", "#DAA520": "Ouro Velho", "#F0C420": "Amarelo Sol", "#A35D5D": "Terracota Rosa",
+  "#FF6F61": "Coral Vivo", "#4B0082": "Índigo", "#800020": "Borgonha", "#006D5B": "Verde Jade",
+  "#FFD700": "Ouro", "#C0C0C0": "Prata", "#000000": "Preto", "#FFFFFF": "Branco",
+  "#F5E6CC": "Creme", "#D2691E": "Chocolate", "#8B0000": "Vermelho Escuro", "#556B2F": "Verde Oliva",
+};
+
+const INDIVIDUAL_COLORS = Object.keys(COLOR_MAP);
 
 const SustainableCollectionSection = () => {
   const { user } = useAuth();
@@ -29,22 +47,17 @@ const SustainableCollectionSection = () => {
   const [showSaved, setShowSaved] = useState(false);
   const [viewingItem, setViewingItem] = useState<any>(null);
 
-  // Geral
   const [nomeColecao, setNomeColecao] = useState("");
   const [temaConceito, setTemaConceito] = useState("");
   const [dataInicio, setDataInicio] = useState("");
   const [dataTermino, setDataTermino] = useState("");
   const [status, setStatus] = useState("planejamento");
   const [responsavel, setResponsavel] = useState("");
-
-  // Resíduos
   const [tipoResiduo, setTipoResiduo] = useState("");
   const [quantidadeDisponivel, setQuantidadeDisponivel] = useState("0");
   const [unidade, setUnidade] = useState("kg");
   const [origemResiduo, setOrigemResiduo] = useState("");
   const [caracteristicas, setCaracteristicas] = useState("");
-
-  // Peças
   const [pecasSelecionadas, setPecasSelecionadas] = useState<string[]>([]);
   const [outrosTipos, setOutrosTipos] = useState("");
   const [qtdTotalPecas, setQtdTotalPecas] = useState("0");
@@ -52,48 +65,39 @@ const SustainableCollectionSection = () => {
   const [tecnicasUpcycling, setTecnicasUpcycling] = useState("");
   const [tamanhosSelecionados, setTamanhosSelecionados] = useState<string[]>([]);
   const [outrosTamanhos, setOutrosTamanhos] = useState("");
-
-  // Orçamento
   const [materiaPrima, setMateriaPrima] = useState("0");
   const [maoDeObra, setMaoDeObra] = useState("0");
   const [equipamentos, setEquipamentos] = useState("0");
   const [marketing, setMarketing] = useState("0");
   const [precoVenda, setPrecoVenda] = useState("0");
-
-  // Design
   const [paletaCores, setPaletaCores] = useState("");
   const [referenciasVisuais, setReferenciasVisuais] = useState("");
   const [esbocosCroquis, setEsbocosCroquis] = useState("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
-
-  // Impacto
   const [residuosEvitados, setResiduosEvitados] = useState("0");
   const [aguaEconomizada, setAguaEconomizada] = useState("0");
   const [co2Reduzido, setCo2Reduzido] = useState("0");
-
-  // Responsáveis
   const [respDesign, setRespDesign] = useState("");
   const [respProducao, setRespProducao] = useState("");
   const [respQualidade, setRespQualidade] = useState("");
   const [respMarketing, setRespMarketing] = useState("");
 
-  // Calc
   const custoTotal = (parseFloat(materiaPrima) || 0) + (parseFloat(maoDeObra) || 0) + (parseFloat(equipamentos) || 0) + (parseFloat(marketing) || 0);
   const pv = parseFloat(precoVenda) || 0;
   const margem = pv > 0 ? ((pv - custoTotal) / pv * 100) : 0;
   const roi = custoTotal > 0 ? ((pv - custoTotal) / custoTotal * 100) : 0;
-
-  // Impacto calc
   const impactoTotal = (parseFloat(residuosEvitados) || 0) * 2.5 + (parseFloat(aguaEconomizada) || 0) * 0.01 + (parseFloat(co2Reduzido) || 0) * 5;
 
   const togglePeca = (p: string) => setPecasSelecionadas(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   const toggleTamanho = (t: string) => setTamanhosSelecionados(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
-  const toggleColor = (c: string) => {
-    setSelectedColors(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
+  const toggleColor = (hex: string) => {
+    const colorName = COLOR_MAP[hex] || hex;
+    const label = `${colorName} (${hex})`;
+    setSelectedColors(prev => prev.includes(hex) ? prev.filter(x => x !== hex) : [...prev, hex]);
     setPaletaCores(prev => {
-      const colors = prev ? prev.split(', ').filter(Boolean) : [];
-      if (colors.includes(c)) return colors.filter(x => x !== c).join(', ');
-      return [...colors, c].join(', ');
+      const items = prev ? prev.split(', ').filter(Boolean) : [];
+      if (items.find(i => i.includes(hex))) return items.filter(i => !i.includes(hex)).join(', ');
+      return [...items, label].join(', ');
     });
   };
 
@@ -128,6 +132,14 @@ const SustainableCollectionSection = () => {
     { key: "orcamento", label: "Orçamento" }, { key: "design", label: "Design" }, { key: "impacto", label: "Impacto" },
   ];
 
+  // Nome da coleção inline component for non-geral tabs
+  const NomeColecaoField = () => (
+    <div className="mb-4 p-3 rounded-lg bg-primary/5 border border-primary/20">
+      <Label className="text-base font-semibold">Nome da Coleção *</Label>
+      <Input value={nomeColecao} onChange={e => setNomeColecao(e.target.value)} placeholder="Ex: Coleção Verão Sustentável" className="bg-background text-base mt-1" />
+    </div>
+  );
+
   return (
     <section id="colecao" className="py-16 px-4 section-gradient">
       <div className="max-w-5xl mx-auto">
@@ -137,7 +149,6 @@ const SustainableCollectionSection = () => {
           <p className="text-muted-foreground max-w-2xl mx-auto text-base">Passo a passo para desenvolver uma coleção com princípios de economia circular.</p>
         </div>
 
-        {/* Tabs */}
         <div className="flex gap-1 mb-6 overflow-x-auto pb-2">
           {TABS.map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${activeTab === tab.key ? "bg-primary text-primary-foreground shadow" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>{tab.label}</button>
@@ -145,7 +156,6 @@ const SustainableCollectionSection = () => {
         </div>
 
         <Card className="glass-card p-6 md:p-8 rounded-2xl space-y-6">
-          {/* GERAL */}
           {activeTab === "geral" && (
             <div className="space-y-6">
               <div><h3 className="text-xl font-bold font-display text-foreground mb-1">Informações Gerais</h3><p className="text-sm text-muted-foreground">Dados básicos do projeto de coleção</p></div>
@@ -164,9 +174,9 @@ const SustainableCollectionSection = () => {
             </div>
           )}
 
-          {/* RESÍDUOS */}
           {activeTab === "residuos" && (
             <div className="space-y-6">
+              <NomeColecaoField />
               <div><h3 className="text-xl font-bold font-display text-foreground mb-1">Resíduos Utilizados</h3><p className="text-sm text-muted-foreground">Materiais têxteis que serão reaproveitados</p></div>
               <div className="space-y-4">
                 <div><Label className="text-base">Tipo de Resíduo Têxtil</Label>
@@ -184,35 +194,35 @@ const SustainableCollectionSection = () => {
             </div>
           )}
 
-          {/* PEÇAS */}
           {activeTab === "pecas" && (
             <div className="space-y-6">
+              <NomeColecaoField />
               <div><h3 className="text-xl font-bold font-display text-foreground mb-1">Planejamento de Peças</h3><p className="text-sm text-muted-foreground">Produtos que serão criados na coleção</p></div>
-              <div><Label className="text-base mb-2 block">Tipos de Peças a Serem Criadas</Label><p className="text-sm text-muted-foreground mb-3">Selecione os tipos de peças que serão criadas na coleção</p>
+              <div><Label className="text-base mb-2 block">Tipos de Peças a Serem Criadas</Label>
                 <div className="grid grid-cols-3 gap-2">
                   {PECAS_TIPOS.map(p => (
                     <button key={p} onClick={() => togglePeca(p)} className={`py-2 px-3 rounded-lg text-sm font-medium border transition-all ${pecasSelecionadas.includes(p) ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-foreground hover:border-primary/50"}`}>{p}</button>
                   ))}
                 </div>
               </div>
-              <div><Label className="text-base">Outros Tipos (digite aqui)</Label><Input value={outrosTipos} onChange={e => setOutrosTipos(e.target.value)} placeholder="Digite outros tipos separados por vírgula" className="bg-background text-base" /></div>
+              <div><Label className="text-base">Outros Tipos</Label><Input value={outrosTipos} onChange={e => setOutrosTipos(e.target.value)} placeholder="Digite outros tipos separados por vírgula" className="bg-background text-base" /></div>
               <div><Label className="text-base">Quantidade Total de Peças</Label><Input type="number" value={qtdTotalPecas} onChange={e => setQtdTotalPecas(e.target.value)} className="bg-background text-base" /></div>
-              <div><Label className="text-base">Descrição Detalhada das Peças</Label><Textarea value={descricaoPecas} onChange={e => setDescricaoPecas(e.target.value)} placeholder="Descreva cada tipo de peça, características, cores, tamanhos..." className="bg-background text-base" /></div>
-              <div><Label className="text-base">Técnicas de Upcycling a Serem Aplicadas</Label><Textarea value={tecnicasUpcycling} onChange={e => setTecnicasUpcycling(e.target.value)} placeholder="Ex: Patchwork, Bordado, Tingimento natural, Customização..." className="bg-background text-base" /></div>
-              <div><Label className="text-base mb-2 block">Tamanhos Disponíveis</Label><p className="text-sm text-muted-foreground mb-3">Selecione os tamanhos que estarão disponíveis</p>
+              <div><Label className="text-base">Descrição Detalhada das Peças</Label><Textarea value={descricaoPecas} onChange={e => setDescricaoPecas(e.target.value)} placeholder="Descreva cada tipo de peça..." className="bg-background text-base" /></div>
+              <div><Label className="text-base">Técnicas de Upcycling</Label><Textarea value={tecnicasUpcycling} onChange={e => setTecnicasUpcycling(e.target.value)} placeholder="Ex: Patchwork, Bordado, Tingimento natural..." className="bg-background text-base" /></div>
+              <div><Label className="text-base mb-2 block">Tamanhos Disponíveis</Label>
                 <div className="grid grid-cols-6 gap-2">
                   {TAMANHOS.map(t => (
                     <button key={t} onClick={() => toggleTamanho(t)} className={`py-2 px-3 rounded-lg text-sm font-medium border transition-all ${tamanhosSelecionados.includes(t) ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-foreground hover:border-primary/50"}`}>{t}</button>
                   ))}
                 </div>
               </div>
-              <div><Label className="text-base">Outros Tamanhos (digite aqui)</Label><Input value={outrosTamanhos} onChange={e => setOutrosTamanhos(e.target.value)} placeholder="Digite outros tamanhos separados por vírgula" className="bg-background text-base" /></div>
+              <div><Label className="text-base">Outros Tamanhos</Label><Input value={outrosTamanhos} onChange={e => setOutrosTamanhos(e.target.value)} placeholder="Digite outros tamanhos separados por vírgula" className="bg-background text-base" /></div>
             </div>
           )}
 
-          {/* ORÇAMENTO */}
           {activeTab === "orcamento" && (
             <div className="space-y-6">
+              <NomeColecaoField />
               <div><h3 className="text-xl font-bold font-display text-foreground mb-1">Orçamento</h3><p className="text-sm text-muted-foreground">Custos e projeções financeiras</p></div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div><Label className="text-base">Matéria-Prima Adicional (R$)</Label><Input type="number" value={materiaPrima} onChange={e => setMateriaPrima(e.target.value)} className="bg-background text-base" /></div>
@@ -221,29 +231,31 @@ const SustainableCollectionSection = () => {
                 <div><Label className="text-base">Marketing (R$)</Label><Input type="number" value={marketing} onChange={e => setMarketing(e.target.value)} className="bg-background text-base" /></div>
               </div>
               <div><Label className="text-base">Preço de Venda Sugerido (R$)</Label><Input type="number" value={precoVenda} onChange={e => setPrecoVenda(e.target.value)} className="bg-background text-base" /></div>
-              <button onClick={() => toast.success("Orçamento calculado!")} className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-semibold flex items-center justify-center gap-2 text-base"><Calculator className="w-4 h-4" /> Calcular Orçamento Total</button>
               <Card className="p-4 rounded-xl border border-border">
                 <h4 className="font-bold text-foreground mb-3 text-base">Resumo Financeiro</h4>
                 <div className="space-y-2 text-base">
                   <div className="flex justify-between"><span className="text-muted-foreground">Custo Total:</span><span className="font-bold text-primary">R$ {custoTotal.toFixed(2)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Preço de Venda:</span><span className="font-bold text-foreground">R$ {pv.toFixed(2)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Margem de Lucro:</span><span className="font-bold">{margem.toFixed(1)}%</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">ROI (Retorno sobre Investimento):</span><span className="font-bold">{roi.toFixed(1)}%</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">ROI:</span><span className="font-bold">{roi.toFixed(1)}%</span></div>
                 </div>
               </Card>
             </div>
           )}
 
-          {/* DESIGN */}
           {activeTab === "design" && (
             <div className="space-y-6">
+              <NomeColecaoField />
               <div><h3 className="text-xl font-bold font-display text-foreground mb-1">Design e Desenvolvimento</h3><p className="text-sm text-muted-foreground">Informações criativas e visuais da coleção</p></div>
-              <div><Label className="text-base">Paleta de Cores da Coleção</Label><Input value={paletaCores} onChange={e => setPaletaCores(e.target.value)} placeholder="Ex: Verde musgo, Terracota, Bege natural, Azul petróleo" className="bg-background text-base" /></div>
+              <div><Label className="text-base">Paleta de Cores da Coleção</Label><Input value={paletaCores} onChange={e => setPaletaCores(e.target.value)} placeholder="Clique nas cores abaixo ou digite manualmente" className="bg-background text-base" /></div>
               <div>
                 <Label className="text-base mb-2 block">Paletas Predefinidas</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {PALETAS.map(p => (
-                    <Card key={p.name} className="p-3 rounded-xl border border-border cursor-pointer hover:shadow-md" onClick={() => setPaletaCores(p.colors.join(', '))}>
+                    <Card key={p.name} className="p-3 rounded-xl border border-border cursor-pointer hover:shadow-md" onClick={() => {
+                      setSelectedColors(p.colors);
+                      setPaletaCores(p.colors.map(c => `${COLOR_MAP[c] || c} (${c})`).join(', '));
+                    }}>
                       <p className="font-semibold text-foreground text-sm mb-1 flex items-center gap-1"><Leaf className="w-3 h-3" /> {p.name}</p>
                       <div className="flex gap-1 mb-1">{p.colors.map((c, i) => <div key={i} className="w-8 h-6 rounded" style={{ backgroundColor: c }} />)}</div>
                       <p className="text-xs text-muted-foreground">{p.desc}</p>
@@ -253,21 +265,34 @@ const SustainableCollectionSection = () => {
               </div>
               <div>
                 <Label className="text-base mb-1 block">Selecione Cores Individuais</Label>
-                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para selecioná-las. As cores selecionadas aparecerão destacadas e preencherão automaticamente o campo de paleta de cores.</p>
-                <div className="grid grid-cols-5 md:grid-cols-7 gap-2">
+                <p className="text-sm text-muted-foreground mb-3">Clique nas cores para selecioná-las. O nome e código da cor aparecerão automaticamente no campo acima.</p>
+                <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
                   {INDIVIDUAL_COLORS.map((c, i) => (
-                    <button key={i} onClick={() => toggleColor(c)} className={`w-full aspect-square rounded-lg border-2 transition-all ${selectedColors.includes(c) ? "border-foreground scale-110 shadow-lg" : "border-transparent"}`} style={{ backgroundColor: c }} />
+                    <button key={i} onClick={() => toggleColor(c)} className={`w-full aspect-square rounded-lg border-2 transition-all relative group ${selectedColors.includes(c) ? "border-foreground scale-110 shadow-lg" : "border-transparent hover:border-border"}`} style={{ backgroundColor: c }} title={`${COLOR_MAP[c]} (${c})`}>
+                      {selectedColors.includes(c) && <div className="absolute inset-0 flex items-center justify-center"><span className="text-white text-xs font-bold drop-shadow-lg">✓</span></div>}
+                    </button>
                   ))}
                 </div>
+                {selectedColors.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {selectedColors.map(c => (
+                      <span key={c} className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-foreground">
+                        <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: c }} />
+                        {COLOR_MAP[c] || c} ({c})
+                        <button onClick={() => toggleColor(c)} className="ml-1 text-muted-foreground hover:text-destructive">×</button>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div><Label className="text-base">Referências Visuais</Label><Textarea value={referenciasVisuais} onChange={e => setReferenciasVisuais(e.target.value)} placeholder="Descreva as inspirações visuais, moodboard, referências de estilo..." className="bg-background text-base" /></div>
-              <div><Label className="text-base">Esboços/Croquis</Label><Textarea value={esbocosCroquis} onChange={e => setEsbocosCroquis(e.target.value)} placeholder="Descreva os esboços desenvolvidos ou anexe links para imagens..." className="bg-background text-base" /></div>
+              <div><Label className="text-base">Referências Visuais</Label><Textarea value={referenciasVisuais} onChange={e => setReferenciasVisuais(e.target.value)} placeholder="Descreva as inspirações visuais, moodboard..." className="bg-background text-base" /></div>
+              <div><Label className="text-base">Esboços/Croquis</Label><Textarea value={esbocosCroquis} onChange={e => setEsbocosCroquis(e.target.value)} placeholder="Descreva os esboços desenvolvidos..." className="bg-background text-base" /></div>
             </div>
           )}
 
-          {/* IMPACTO */}
           {activeTab === "impacto" && (
             <div className="space-y-6">
+              <NomeColecaoField />
               <div><h3 className="text-xl font-bold font-display text-foreground mb-1">Calculadora de Impacto Ambiental</h3><p className="text-sm text-muted-foreground">Estime o impacto positivo da sua coleção sustentável</p></div>
               <Card className="p-4 rounded-xl bg-primary/5 border border-primary/20">
                 <h4 className="font-semibold text-foreground text-base mb-2 flex items-center gap-2"><Leaf className="w-4 h-4 text-primary" /> Como usar a calculadora</h4>
@@ -292,7 +317,6 @@ const SustainableCollectionSection = () => {
                   <div className="flex justify-between border-t border-border pt-2"><span className="text-muted-foreground font-semibold">Índice de Impacto:</span><span className="font-bold text-primary text-lg">{impactoTotal.toFixed(1)} pts</span></div>
                 </div>
               </Card>
-
               <div className="space-y-4">
                 <h4 className="font-bold text-foreground text-base">Responsáveis por Cada Etapa</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -338,31 +362,51 @@ const SustainableCollectionSection = () => {
       {viewingItem && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" onClick={() => setViewingItem(null)}>
           <div className="absolute inset-0 bg-black/50" />
-          <div className="relative bg-card max-w-lg w-full max-h-[80vh] overflow-auto rounded-2xl p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="relative bg-card max-w-lg w-full max-h-[80vh] overflow-auto rounded-2xl p-6" onClick={e => e.stopPropagation()}>
             <button onClick={() => setViewingItem(null)} className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"><X size={24} /></button>
             <h3 className="text-xl font-bold font-display text-foreground mb-4">{viewingItem.titulo}</h3>
             <div className="space-y-4 text-base">
               {viewingItem.dados?.geral && (
-                <div>
-                  <p className="font-semibold text-foreground mb-1">Geral</p>
+                <div><p className="font-semibold text-foreground mb-1">Geral</p>
                   <p className="text-sm text-muted-foreground">Tema: {viewingItem.dados.geral.temaConceito || '-'}</p>
                   <p className="text-sm text-muted-foreground">Status: {viewingItem.dados.geral.status}</p>
                   <p className="text-sm text-muted-foreground">Responsável: {viewingItem.dados.geral.responsavel || '-'}</p>
+                  <p className="text-sm text-muted-foreground">Período: {viewingItem.dados.geral.dataInicio || '-'} a {viewingItem.dados.geral.dataTermino || '-'}</p>
+                </div>
+              )}
+              {viewingItem.dados?.residuos?.tipoResiduo && (
+                <div><p className="font-semibold text-foreground mb-1">Resíduos</p>
+                  <p className="text-sm text-muted-foreground">Tipo: {viewingItem.dados.residuos.tipoResiduo}</p>
+                  <p className="text-sm text-muted-foreground">Quantidade: {viewingItem.dados.residuos.quantidadeDisponivel} {viewingItem.dados.residuos.unidade}</p>
+                  <p className="text-sm text-muted-foreground">Origem: {viewingItem.dados.residuos.origemResiduo || '-'}</p>
                 </div>
               )}
               {viewingItem.dados?.pecas?.pecasSelecionadas?.length > 0 && (
-                <div><p className="font-semibold text-foreground mb-1">Peças</p><p className="text-sm text-muted-foreground">{viewingItem.dados.pecas.pecasSelecionadas.join(', ')}</p></div>
+                <div><p className="font-semibold text-foreground mb-1">Peças</p>
+                  <p className="text-sm text-muted-foreground">{viewingItem.dados.pecas.pecasSelecionadas.join(', ')}</p>
+                  <p className="text-sm text-muted-foreground">Total: {viewingItem.dados.pecas.qtdTotalPecas} peças</p>
+                </div>
               )}
               {viewingItem.dados?.orcamento && (
-                <div>
-                  <p className="font-semibold text-foreground mb-1">Orçamento</p>
+                <div><p className="font-semibold text-foreground mb-1">Orçamento</p>
                   <p className="text-sm text-muted-foreground">Custo: R$ {viewingItem.dados.orcamento.custoTotal?.toFixed(2)} | Margem: {viewingItem.dados.orcamento.margem?.toFixed(1)}%</p>
                 </div>
               )}
+              {viewingItem.dados?.design?.paletaCores && (
+                <div><p className="font-semibold text-foreground mb-1">Design</p>
+                  <p className="text-sm text-muted-foreground">Cores: {viewingItem.dados.design.paletaCores}</p>
+                </div>
+              )}
               {viewingItem.dados?.impacto && (
-                <div>
-                  <p className="font-semibold text-foreground mb-1">Impacto Ambiental</p>
+                <div><p className="font-semibold text-foreground mb-1">Impacto Ambiental</p>
                   <p className="text-sm text-muted-foreground">Índice: {viewingItem.dados.impacto.impactoTotal?.toFixed(1)} pts</p>
+                  <p className="text-sm text-muted-foreground">Resíduos: {viewingItem.dados.impacto.residuosEvitados}kg | Água: {viewingItem.dados.impacto.aguaEconomizada}L | CO₂: {viewingItem.dados.impacto.co2Reduzido}kg</p>
+                </div>
+              )}
+              {viewingItem.dados?.responsaveis && (
+                <div><p className="font-semibold text-foreground mb-1">Responsáveis</p>
+                  <p className="text-sm text-muted-foreground">Design: {viewingItem.dados.responsaveis.respDesign || '-'} | Produção: {viewingItem.dados.responsaveis.respProducao || '-'}</p>
+                  <p className="text-sm text-muted-foreground">Qualidade: {viewingItem.dados.responsaveis.respQualidade || '-'} | Marketing: {viewingItem.dados.responsaveis.respMarketing || '-'}</p>
                 </div>
               )}
             </div>

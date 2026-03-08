@@ -19,15 +19,16 @@ const KanbanSection = () => {
   const { user } = useAuth();
   const { items: savedItems, saveItem, removeItem } = useItensSalvos("kanban");
   const [tasks, setTasks] = useState<KanbanTask[]>([]);
-  const [newTask, setNewTask] = useState("");
+  const [columnInputs, setColumnInputs] = useState<Record<string, string>>({ todo: "", doing: "", done: "" });
   const [boardName, setBoardName] = useState("");
   const [showSaved, setShowSaved] = useState(false);
   const [viewingItem, setViewingItem] = useState<any>(null);
 
-  const addTask = () => {
-    if (!newTask.trim()) { toast.error("Digite uma tarefa."); return; }
-    setTasks((prev) => [...prev, { id: createId(), text: newTask.trim(), column: "todo" }]);
-    setNewTask("");
+  const addTaskToColumn = (column: "todo" | "doing" | "done") => {
+    const text = columnInputs[column]?.trim();
+    if (!text) { toast.error("Digite uma tarefa."); return; }
+    setTasks((prev) => [...prev, { id: createId(), text, column }]);
+    setColumnInputs((prev) => ({ ...prev, [column]: "" }));
     toast.success("Tarefa adicionada!");
   };
 
@@ -43,7 +44,7 @@ const KanbanSection = () => {
   };
 
   const handleClear = () => {
-    setBoardName(""); setTasks([]); setNewTask("");
+    setBoardName(""); setTasks([]); setColumnInputs({ todo: "", doing: "", done: "" });
     toast.success("Campos limpos!");
   };
 
@@ -60,25 +61,33 @@ const KanbanSection = () => {
           <div className="flex items-start gap-3">
             <Info className="w-5 h-5 text-primary mt-0.5 shrink-0" />
             <div className="text-sm text-muted-foreground space-y-1">
-              <p><strong className="text-foreground">Como usar:</strong> Adicione tarefas e mova entre as colunas conforme o progresso.</p>
+              <p><strong className="text-foreground">Como usar:</strong> Digite tarefas diretamente em cada coluna e clique em "+" para adicionar.</p>
               <p>• <strong>A Fazer:</strong> planejadas • <strong>Fazendo:</strong> em execução • <strong>Feito:</strong> concluídas</p>
             </div>
           </div>
         </Card>
 
-        <div className="flex gap-3 mb-4">
+        <div className="flex gap-3 mb-6">
           <Input value={boardName} onChange={(e) => setBoardName(e.target.value)} placeholder="Nome do quadro..." className="bg-card max-w-xs text-base" />
-        </div>
-
-        <div className="flex gap-3 mb-8">
-          <Input value={newTask} onChange={(e) => setNewTask(e.target.value)} placeholder="Ex: Separar resíduos de corte..." className="bg-card text-base" onKeyDown={(e) => e.key === "Enter" && addTask()} />
-          <button onClick={addTask} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2 rounded-lg font-medium hover:brightness-110 transition-all whitespace-nowrap text-base"><Plus className="w-4 h-4" /> Adicionar</button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {COLUMNS.map((col) => (
             <Card key={col.key} className={`glass-card rounded-xl border-t-4 ${col.color} p-4 min-h-[200px]`}>
-              <h4 className="font-semibold font-display text-foreground mb-4 text-base">{col.title}</h4>
+              <h4 className="font-semibold font-display text-foreground mb-3 text-base">{col.title}</h4>
+              
+              {/* Input para adicionar tarefa diretamente na coluna */}
+              <div className="flex gap-2 mb-3">
+                <Input
+                  value={columnInputs[col.key]}
+                  onChange={(e) => setColumnInputs(prev => ({ ...prev, [col.key]: e.target.value }))}
+                  placeholder="Digitar tarefa..."
+                  className="bg-background text-sm"
+                  onKeyDown={(e) => e.key === "Enter" && addTaskToColumn(col.key)}
+                />
+                <button onClick={() => addTaskToColumn(col.key)} className="p-2 bg-primary text-primary-foreground rounded-lg hover:brightness-110 transition-all shrink-0" title="Adicionar"><Plus className="w-4 h-4" /></button>
+              </div>
+
               <div className="space-y-2">
                 {tasks.filter((t) => t.column === col.key).map((task) => (
                   <div key={task.id} className="bg-background rounded-lg p-3 flex items-center justify-between gap-2 shadow-sm border border-border/50">
@@ -89,7 +98,7 @@ const KanbanSection = () => {
                     </div>
                   </div>
                 ))}
-                {tasks.filter((t) => t.column === col.key).length === 0 && <p className="text-xs text-muted-foreground text-center py-6">Nenhuma tarefa</p>}
+                {tasks.filter((t) => t.column === col.key).length === 0 && <p className="text-xs text-muted-foreground text-center py-4">Nenhuma tarefa</p>}
               </div>
             </Card>
           ))}
