@@ -1,6 +1,8 @@
-import { ExternalLink, Palette, Scissors } from "lucide-react";
+import { ExternalLink, Palette, Scissors, Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import toolsHero from "@/assets/tools-hero.jpg";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ToolCard {
