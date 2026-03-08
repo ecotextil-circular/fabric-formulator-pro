@@ -160,6 +160,36 @@ const SustainableCollectionSection = () => {
     </div>
   );
 
+  const uploadAndAttachFile = async (
+    file: File,
+    setField: React.Dispatch<React.SetStateAction<string>>,
+    emoji: string
+  ) => {
+    if (!user?.id) {
+      toast.error("Faça login para enviar arquivos.");
+      return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("Arquivo muito grande (máximo 20MB).");
+      return;
+    }
+
+    try {
+      const safeName = file.name.replace(/\s+/g, "-").toLowerCase();
+      const path = `${user.id}/colecao/${Date.now()}-${safeName}`;
+      const { error: uploadError } = await supabase.storage.from("uploads").upload(path, file, { upsert: false });
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("uploads").getPublicUrl(path);
+      setField(prev => (prev ? `${prev}\n${emoji} ${file.name} — ${data.publicUrl}` : `${emoji} ${file.name} — ${data.publicUrl}`));
+      toast.success(`Arquivo "${file.name}" enviado!`);
+    } catch (error: any) {
+      console.error("Erro no upload de arquivo:", error);
+      toast.error(`Erro ao enviar arquivo: ${error?.message || "tente novamente"}`);
+    }
+  };
+
   const handleSave = async () => {
     if (!nomeColecao.trim()) { toast.error("Nome da coleção é obrigatório."); return; }
     const dados = {
