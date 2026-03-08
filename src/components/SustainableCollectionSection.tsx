@@ -149,6 +149,66 @@ const SustainableCollectionSection = () => {
     toast.success(`${fieldName} baixado!`);
   };
 
+  // Extract uploaded file entries from text (emoji name — url)
+  const extractFiles = (text: string) => {
+    if (!text) return [];
+    const lines = text.split('\n');
+    const files: { emoji: string; name: string; url: string }[] = [];
+    for (const line of lines) {
+      const match = line.match(/^(📄|📎|🎬)\s*(.+?)\s*—\s*(https?:\/\/.+)$/);
+      if (match) {
+        files.push({ emoji: match[1], name: match[2].trim(), url: match[3].trim() });
+      }
+    }
+    return files;
+  };
+
+  const getFileIcon = (emoji: string) => {
+    if (emoji === '📄') return <FileText className="w-4 h-4 text-red-500" />;
+    if (emoji === '📎') return <Image className="w-4 h-4 text-blue-500" />;
+    if (emoji === '🎬') return <Video className="w-4 h-4 text-purple-500" />;
+    return <FileText className="w-4 h-4" />;
+  };
+
+  const getFileType = (emoji: string) => {
+    if (emoji === '📄') return 'PDF';
+    if (emoji === '📎') return 'Imagem';
+    if (emoji === '🎬') return 'Vídeo';
+    return 'Arquivo';
+  };
+
+  const removeFileFromField = (url: string, setField: (value: string | ((prev: string) => string)) => void) => {
+    setField(prev => prev.split('\n').filter(line => !line.includes(url)).join('\n').trim());
+  };
+
+  const FileList = ({ content, setField }: { content: string; setField: (value: string | ((prev: string) => string)) => void }) => {
+    const files = extractFiles(content);
+    if (files.length === 0) return null;
+    return (
+      <div className="mt-3 space-y-2">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Arquivos enviados ({files.length})</p>
+        {files.map((f, i) => (
+          <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/50 border border-border hover:shadow-sm transition-all">
+            {getFileIcon(f.emoji)}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">{f.name}</p>
+              <p className="text-xs text-muted-foreground">{getFileType(f.emoji)}</p>
+            </div>
+            <a href={f.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 transition-all" onClick={e => e.stopPropagation()}>
+              <Eye className="w-3 h-3" /> Abrir
+            </a>
+            <a href={f.url} download className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all" onClick={e => e.stopPropagation()}>
+              <Download className="w-3 h-3" /> Baixar
+            </a>
+            <button onClick={() => removeFileFromField(f.url, setField)} className="p-1.5 text-muted-foreground hover:text-destructive rounded transition-all">
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const DownloadButtons = ({ content, fieldName }: { content: string; fieldName: string }) => (
     <div className="flex gap-2 mt-2 flex-wrap">
       <button type="button" onClick={() => handleDownloadField(content, fieldName, 'pdf')} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 border border-border transition-all">
@@ -417,6 +477,7 @@ const SustainableCollectionSection = () => {
                     }} />
                   </label>
                 </div>
+                <FileList content={referenciasVisuais} setField={setReferenciasVisuais} />
               </div>
               <div>
                 <Label className="text-base">Esboços/Croquis</Label>
@@ -445,6 +506,7 @@ const SustainableCollectionSection = () => {
                     }} />
                   </label>
                 </div>
+                <FileList content={esbocosCroquis} setField={setEsbocosCroquis} />
               </div>
             </div>
           )}
@@ -561,6 +623,28 @@ const SustainableCollectionSection = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+              {/* Show uploaded files from design fields */}
+              {(extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').length > 0 || extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').length > 0) && (
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Arquivos Enviados</p>
+                  {extractFiles(viewingItem.dados?.design?.referenciasVisuais || '').map((f: any, i: number) => (
+                    <a key={`ref-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
+                      {getFileIcon(f.emoji)}
+                      <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
+                      <span className="text-xs text-muted-foreground">Referência</span>
+                      <Eye className="w-3.5 h-3.5 text-primary" />
+                    </a>
+                  ))}
+                  {extractFiles(viewingItem.dados?.design?.esbocosCroquis || '').map((f: any, i: number) => (
+                    <a key={`esb-${i}`} href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:shadow-sm mb-2 transition-all">
+                      {getFileIcon(f.emoji)}
+                      <span className="text-sm font-medium text-foreground flex-1 truncate">{f.name}</span>
+                      <span className="text-xs text-muted-foreground">Esboço</span>
+                      <Eye className="w-3.5 h-3.5 text-primary" />
+                    </a>
+                  ))}
                 </div>
               )}
               {viewingItem.dados?.impacto && (
