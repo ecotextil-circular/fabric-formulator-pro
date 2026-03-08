@@ -253,7 +253,7 @@ const SustainableCollectionSection = () => {
     setTipoResiduo(""); setQuantidadeDisponivel("0"); setUnidade("kg"); setOrigemResiduo(""); setCaracteristicas("");
     setPecasSelecionadas([]); setOutrosTipos(""); setQtdTotalPecas("0"); setDescricaoPecas(""); setTecnicasUpcycling(""); setTamanhosSelecionados([]); setOutrosTamanhos("");
     setMateriaPrima("0"); setMaoDeObra("0"); setEquipamentos("0"); setMarketing("0"); setPrecoVenda("0");
-    setPaletaCores(""); setReferenciasVisuais(""); setEsbocosCroquis(""); setSelectedColors([]);
+    setPaletaCores(""); setReferenciasVisuais(""); setEsbocosCroquis(""); setSelectedColors([]); setReferenciasFiles([]); setEsbocosFiles([]);
     setResiduosEvitados("0"); setAguaEconomizada("0"); setCo2Reduzido("0");
     setRespDesign(""); setRespProducao(""); setRespQualidade(""); setRespMarketing("");
     toast.success("Campos limpos!");
