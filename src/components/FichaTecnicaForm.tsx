@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, Download, Upload, FileText, Loader2, Eye, X, Eraser } from "lucide-react";
+import SectionBanner, { SECTION_BANNERS } from "@/components/SectionBanner";
 import { useSupabaseCrud } from "@/hooks/useSupabaseCrud";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
