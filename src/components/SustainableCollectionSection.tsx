@@ -13,7 +13,7 @@ const PECAS_TIPOS = ["Calça","Saia Curta","Saia Midi","Saia Longa","Blusa de Ma
 const TAMANHOS = ["PP","P","M","G","G1","G2","G3","G4","34","36","38","40","42","44","46","48","50","52","54","56","XXS","XS","S","M","L","XL","XXL","XXXL"];
 const RESIDUOS_TIPOS = ["Retalhos de tecido","Fios e linhas","Sobras de malha","Aparas de couro","Resíduos de tingimento","Embalagens","Outros"];
 const PALETAS = [
-  { name: "Terra Natural", colors: ["#5C4033","#C4A35A","#A9B18E","#D4C5A9","#8B7355","#C2B280"], desc: "Tons terrosos e naturais" },
+  { name: "Terra Natural", colors: ["#5C4033","#8B7355","#C4A35A","#D4C5A9","#C2B280","#A0826D"], desc: "Tons terrosos e naturais" },
   { name: "Verde Sustentável", colors: ["#2D5016","#3A7D44","#69B578","#A7C957","#6B8E23","#8FBC8F"], desc: "Paleta verde inspirada na natureza" },
   { name: "Oceano Consciente", colors: ["#1B4965","#2C6E8C","#3D8DAF","#5ABED6","#4A7C91","#6EADC1"], desc: "Tons de azul inspirados no oceano" },
   { name: "Deserto Minimalista", colors: ["#8B6F47","#A0826D","#C4AE97","#D5C4B0","#B8A088","#9C8B72"], desc: "Paleta neutra e minimalista" },
@@ -23,22 +23,32 @@ const PALETAS = [
   { name: "Mostarda & Âmbar", colors: ["#D4A017","#C68E17","#B8860B","#DAA520","#E8A317","#F0C420"], desc: "Tons quentes de mostarda" },
 ];
 
-const COLOR_MAP: Record<string, string> = {
-  "#2D5016": "Verde Floresta", "#7CB342": "Verde Lima", "#5D8A5E": "Verde Musgo", "#9CCC65": "Verde Claro",
-  "#E57373": "Rosa Coral", "#D7CCC8": "Bege Rosado", "#8D6E63": "Marrom Café", "#1B5E50": "Verde Petróleo",
-  "#2980B9": "Azul Royal", "#5DADE2": "Azul Celeste", "#4A8C8C": "Teal", "#FAD6A5": "Pêssego",
-  "#F5F5DC": "Bege", "#BDBDBD": "Cinza Claro", "#E0E0E0": "Cinza Pérola", "#F9A825": "Amarelo Ouro",
-  "#E8A317": "Âmbar", "#F57C00": "Laranja", "#8D5524": "Marrom Terra", "#5B9BD5": "Azul Aço",
-  "#D4A5A5": "Rosa Antigo", "#C97B7B": "Rosa Queimado", "#7B6D8D": "Lavanda Escuro", "#9B8BB4": "Lavanda",
-  "#1B4965": "Azul Marinho", "#3A7D44": "Verde Esmeralda", "#C4A35A": "Dourado", "#5C4033": "Marrom Escuro",
-  "#A7C957": "Verde Abacate", "#D4C5A9": "Areia", "#808080": "Cinza Médio", "#2F4F4F": "Cinza Ardósia",
-  "#B8860B": "Mostarda Escura", "#DAA520": "Ouro Velho", "#F0C420": "Amarelo Sol", "#A35D5D": "Terracota Rosa",
-  "#FF6F61": "Coral Vivo", "#4B0082": "Índigo", "#800020": "Borgonha", "#006D5B": "Verde Jade",
-  "#FFD700": "Ouro", "#C0C0C0": "Prata", "#000000": "Preto", "#FFFFFF": "Branco",
-  "#F5E6CC": "Creme", "#D2691E": "Chocolate", "#8B0000": "Vermelho Escuro", "#556B2F": "Verde Oliva",
-};
-
-const INDIVIDUAL_COLORS = Object.keys(COLOR_MAP);
+const ALL_COLORS: { hex: string; name: string }[] = [
+  // Brancos e Cremes
+  { hex: "#FFFFFF", name: "Branco" }, { hex: "#FFFAF0", name: "Branco Floral" }, { hex: "#FFF8DC", name: "Creme Cornsilk" }, { hex: "#F5F5DC", name: "Bege" }, { hex: "#F5E6CC", name: "Creme" }, { hex: "#FAF0E6", name: "Linho" },
+  // Amarelos e Dourados
+  { hex: "#FFD700", name: "Ouro" }, { hex: "#F0C420", name: "Amarelo Sol" }, { hex: "#F9A825", name: "Amarelo Ouro" }, { hex: "#DAA520", name: "Ouro Velho" }, { hex: "#D4A017", name: "Mostarda" }, { hex: "#C68E17", name: "Mostarda Escura" }, { hex: "#B8860B", name: "Dourado Escuro" }, { hex: "#E8A317", name: "Âmbar" },
+  // Laranjas e Pêssego
+  { hex: "#FF8C00", name: "Laranja Escuro" }, { hex: "#F57C00", name: "Laranja" }, { hex: "#FF6F61", name: "Coral Vivo" }, { hex: "#FAD6A5", name: "Pêssego" }, { hex: "#FFAB91", name: "Salmão Claro" }, { hex: "#E57373", name: "Coral Rosa" },
+  // Vermelhos
+  { hex: "#DC143C", name: "Carmesim" }, { hex: "#8B0000", name: "Vermelho Escuro" }, { hex: "#800020", name: "Borgonha" }, { hex: "#A35D5D", name: "Terracota Rosa" }, { hex: "#C97B7B", name: "Rosa Queimado" },
+  // Rosas
+  { hex: "#D4A5A5", name: "Rosa Antigo" }, { hex: "#E8B4B8", name: "Rosa Claro" }, { hex: "#F0C2C2", name: "Rosa Pétala" }, { hex: "#B56E6E", name: "Rosa Seco" }, { hex: "#FFB6C1", name: "Rosa Bebê" }, { hex: "#DB7093", name: "Rosa Médio" },
+  // Roxos e Lavandas
+  { hex: "#4B0082", name: "Índigo" }, { hex: "#6A0DAD", name: "Roxo Escuro" }, { hex: "#7B6D8D", name: "Lavanda Escuro" }, { hex: "#9B8BB4", name: "Lavanda" }, { hex: "#C8B8DB", name: "Lavanda Claro" }, { hex: "#8E7FB0", name: "Lilás" }, { hex: "#B0A0C8", name: "Ametista" }, { hex: "#D8CCE8", name: "Lavanda Suave" },
+  // Azuis
+  { hex: "#000080", name: "Azul Marinho" }, { hex: "#1B4965", name: "Azul Noite" }, { hex: "#2980B9", name: "Azul Royal" }, { hex: "#5DADE2", name: "Azul Celeste" }, { hex: "#5B9BD5", name: "Azul Aço" }, { hex: "#2C6E8C", name: "Azul Petróleo" }, { hex: "#3D8DAF", name: "Azul Claro" }, { hex: "#5ABED6", name: "Azul Céu" }, { hex: "#87CEEB", name: "Azul Bebê" }, { hex: "#B0E0E6", name: "Azul Pó" },
+  // Teais e Turquesas
+  { hex: "#4A8C8C", name: "Teal" }, { hex: "#4A7C91", name: "Teal Escuro" }, { hex: "#6EADC1", name: "Turquesa" }, { hex: "#1B5E50", name: "Verde Petróleo" }, { hex: "#006D5B", name: "Verde Jade" },
+  // Verdes
+  { hex: "#2D5016", name: "Verde Floresta" }, { hex: "#3A7D44", name: "Verde Esmeralda" }, { hex: "#556B2F", name: "Verde Oliva" }, { hex: "#6B8E23", name: "Verde Lima Escuro" }, { hex: "#69B578", name: "Verde Menta" }, { hex: "#A7C957", name: "Verde Abacate" }, { hex: "#8FBC8F", name: "Verde Salvia" }, { hex: "#9CCC65", name: "Verde Claro" }, { hex: "#5D8A5E", name: "Verde Musgo" }, { hex: "#228B22", name: "Verde Floresta Vivo" },
+  // Marrons
+  { hex: "#5C4033", name: "Marrom Escuro" }, { hex: "#8B7355", name: "Marrom Café" }, { hex: "#8D5524", name: "Marrom Terra" }, { hex: "#D2691E", name: "Chocolate" }, { hex: "#8D6E63", name: "Marrom Rosado" }, { hex: "#A0826D", name: "Marrom Claro" }, { hex: "#C4A35A", name: "Dourado Suave" }, { hex: "#C4AE97", name: "Camelo" }, { hex: "#D4C5A9", name: "Areia" }, { hex: "#D5C4B0", name: "Bege Rosado" }, { hex: "#B8A088", name: "Areia Escura" }, { hex: "#9C8B72", name: "Taupe" }, { hex: "#C2B280", name: "Caqui" },
+  // Cinzas
+  { hex: "#2F4F4F", name: "Cinza Ardósia" }, { hex: "#6B6B6B", name: "Cinza Escuro" }, { hex: "#808080", name: "Cinza Médio" }, { hex: "#A9A9A9", name: "Cinza" }, { hex: "#C0C0C0", name: "Prata" }, { hex: "#D3D3D3", name: "Cinza Claro" }, { hex: "#E0E0E0", name: "Cinza Pérola" }, { hex: "#BDBDBD", name: "Cinza Neutro" },
+  // Preto
+  { hex: "#000000", name: "Preto" }, { hex: "#1C1C1C", name: "Preto Suave" }, { hex: "#333333", name: "Carvão" },
+];
 
 const SustainableCollectionSection = () => {
   const { user } = useAuth();
